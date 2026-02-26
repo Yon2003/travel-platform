@@ -21,7 +21,6 @@ export default function BookingPage({ params }: BookingPageProps) {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
 
-  // Extract tripId с workaround за Next.js 16
   const [tripId, setTripId] = useState<string>('');
   const [trip, setTrip] = useState<Trip | null>(null);
   const [loading, setLoading] = useState(true);
@@ -29,7 +28,6 @@ export default function BookingPage({ params }: BookingPageProps) {
   const [error, setError] = useState('');
   const [bookingReference, setBookingReference] = useState('');
 
-  // Form data
   const [passengerName, setPassengerName] = useState('');
   const [passengerEmail, setPassengerEmail] = useState('');
   const [passengerPhone, setPassengerPhone] = useState('');
@@ -37,16 +35,14 @@ export default function BookingPage({ params }: BookingPageProps) {
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
   const [showSeatSelector, setShowSeatSelector] = useState(false);
 
-  // Извличаме tripId от params
   useEffect(() => {
     async function extractTripId() {
       if (params && typeof params === 'object') {
         if ('then' in params) {
-          // params е Promise (Next.js 16)
           const resolved = await params;
           setTripId(resolved.tripId);
         } else if ('tripId' in params) {
-          // params е обект
+
           setTripId(params.tripId);
         }
       }
@@ -54,17 +50,15 @@ export default function BookingPage({ params }: BookingPageProps) {
     extractTripId();
   }, [params]);
 
-  // Redirect ако не си logged in
   useEffect(() => {
     if (!authLoading && !user) {
       router.push('/login');
     }
   }, [user, authLoading, router]);
 
-  // Зареди курса
   useEffect(() => {
     async function fetchTrip() {
-      if (!tripId) return; // Изчакай tripId да се извлече
+      if (!tripId) return;
 
       try {
         const { data, error } = await supabase
@@ -103,7 +97,6 @@ export default function BookingPage({ params }: BookingPageProps) {
     fetchTrip();
   }, [tripId]);
 
-  // Попълни email от user-а
   useEffect(() => {
     if (user?.email) {
       setPassengerEmail(user.email);
@@ -118,7 +111,6 @@ export default function BookingPage({ params }: BookingPageProps) {
     setError('');
 
     try {
-      // Създай booking
       const { data, error } = await supabase
         .from('bookings')
         .insert({
@@ -138,7 +130,6 @@ export default function BookingPage({ params }: BookingPageProps) {
       if (error) throw error;
 
       if (data) {
-        // Намали available seats
         await supabase
           .from('trips')
           .update({
@@ -146,7 +137,6 @@ export default function BookingPage({ params }: BookingPageProps) {
           })
           .eq('id', trip.id);
 
-        // Изтрий временните резервации
         await supabase
           .from('seat_reservations')
           .delete()
@@ -190,7 +180,6 @@ export default function BookingPage({ params }: BookingPageProps) {
 
   if (!trip) return null;
 
-  // Success screen
   if (bookingReference) {
     return (
       <div className="min-h-screen bg-gray-50 py-12 px-4">
@@ -224,7 +213,6 @@ export default function BookingPage({ params }: BookingPageProps) {
     );
   }
 
-  // Booking form
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -239,9 +227,7 @@ export default function BookingPage({ params }: BookingPageProps) {
         <h1 className="text-3xl font-bold mb-8">Резервация на билет</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Детайли за курса */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Trip Summary */}
             <div className="card">
               <h2 className="text-xl font-semibold mb-4">Детайли на курса</h2>
               <div className="flex items-start space-x-4">
@@ -266,7 +252,6 @@ export default function BookingPage({ params }: BookingPageProps) {
               </div>
             </div>
 
-            {/* Passenger Form */}
             <div className="card">
               <h2 className="text-xl font-semibold mb-4">Данни за пътник</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -361,7 +346,7 @@ export default function BookingPage({ params }: BookingPageProps) {
                         ← Назад към избор на брой
                       </button>
                       <SeatSelector
-                        tripId={trip.id}  // ← ДОБАВИ ТОЗИ РЕД
+                        tripId={trip.id}
                         totalSeats={trip.availableSeats}
                         transportType={trip.type}
                         onSeatsSelected={(seats) => {
@@ -391,7 +376,6 @@ export default function BookingPage({ params }: BookingPageProps) {
             </div>
           </div>
 
-          {/* Price Summary */}
           <div className="lg:col-span-1">
             <div className="card sticky top-4">
               <h2 className="text-xl font-semibold mb-4">Обобщение</h2>

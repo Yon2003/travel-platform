@@ -33,7 +33,6 @@ export default function MapModal({
                 className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b">
                     <div>
                         <h2 className="text-2xl font-bold text-gray-900">
@@ -48,8 +47,6 @@ export default function MapModal({
                         <X className="w-6 h-6" />
                     </button>
                 </div>
-
-                {/* Map */}
                 <div className="p-6">
                     <RouteMap
                         from={from}
@@ -59,8 +56,6 @@ export default function MapModal({
                         transportType={transportType}
                     />
                 </div>
-
-                {/* Footer */}
                 <div className="p-6 border-t bg-gray-50">
                     <div className="flex items-center justify-between text-sm">
                         <div>

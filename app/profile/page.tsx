@@ -42,7 +42,6 @@ export default function ProfilePage() {
     }
   }, [user, loading, router]);
 
-  // Fetch bookings
   useEffect(() => {
     async function fetchBookings() {
       if (!user) return;
@@ -127,7 +126,6 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-6xl mx-auto">
         
-        {/* User Info Card */}
         <div className="card mb-8">
           <div className="flex items-start justify-between">
             <div>
@@ -158,7 +156,6 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Bookings Section */}
         <div>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold">
@@ -180,8 +177,6 @@ export default function ProfilePage() {
               {bookings.map((booking) => (
                 <div key={booking.id} className="card hover:shadow-lg transition-shadow">
                   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                    
-                    {/* Left: Trip Info */}
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-3">
                         <span className="text-3xl">
@@ -235,8 +230,6 @@ export default function ProfilePage() {
                         </p>
                       </div>
                     </div>
-
-                    {/* Right: Status & Actions */}
                     <div className="flex flex-col items-end space-y-3">
                       {getStatusBadge(booking.status)}
                       

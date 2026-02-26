@@ -32,7 +32,6 @@ function SearchResults() {
   const [sortBy, setSortBy] = useState<SortOption>('departure-asc');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  // Fetch курсове
   useEffect(() => {
     async function fetchTrips() {
       if (!from || !to) {
@@ -62,7 +61,7 @@ function SearchResults() {
           departureLocation: trip.departure_location,
           arrivalLocation: trip.arrival_location,
           availableSeats: trip.available_seats,
-          departureDate: trip.departure_date, // ДОБАВИ ТОВА
+          departureDate: trip.departure_date,
         }));
 
         setAllTrips(formattedTrips);
@@ -79,11 +78,9 @@ function SearchResults() {
     fetchTrips();
   }, [from, to, date, modesParam]);
 
-  // Филтриране и сортиране
   useEffect(() => {
     let result = [...allTrips];
 
-    // Филтър по час
     if (selectedTimes.length > 0) {
       result = result.filter((trip) => {
         const hour = parseInt(trip.departureTime.split(':')[0]);
@@ -96,12 +93,10 @@ function SearchResults() {
       });
     }
 
-    // Филтър по транспорт
     if (selectedModes.length > 0) {
       result = result.filter((trip) => selectedModes.includes(trip.type));
     }
 
-    // Филтър по цена
     if (selectedPrices.length > 0) {
       result = result.filter((trip) => {
         return selectedPrices.some((price) => {
@@ -113,7 +108,6 @@ function SearchResults() {
       });
     }
 
-    // Филтър по продължителност
     if (selectedDurations.length > 0) {
       result = result.filter((trip) => {
         return selectedDurations.some((dur) => {
@@ -125,7 +119,6 @@ function SearchResults() {
       });
     }
 
-    // Сортиране
     result.sort((a, b) => {
       if (sortBy === 'price-asc') return a.price - b.price;
       if (sortBy === 'duration-asc') return a.duration - b.duration;
@@ -154,7 +147,6 @@ function SearchResults() {
 
   const FiltersContent = () => (
     <div className="space-y-6">
-      {/* Час на тръгване */}
       <div>
         <h3 className="font-semibold text-gray-900 mb-3">Час на тръгване</h3>
         <div className="space-y-2">
@@ -175,8 +167,6 @@ function SearchResults() {
           ))}
         </div>
       </div>
-
-      {/* Вид транспорт */}
       <div>
         <h3 className="font-semibold text-gray-900 mb-3">Вид транспорт</h3>
         <div className="space-y-2">
@@ -197,8 +187,6 @@ function SearchResults() {
           ))}
         </div>
       </div>
-
-      {/* Цена */}
       <div>
         <h3 className="font-semibold text-gray-900 mb-3">Цена</h3>
         <div className="space-y-2">
@@ -219,8 +207,6 @@ function SearchResults() {
           ))}
         </div>
       </div>
-
-      {/* Продължителност */}
       <div>
         <h3 className="font-semibold text-gray-900 mb-3">Продължителност</h3>
         <div className="space-y-2">
@@ -241,8 +227,6 @@ function SearchResults() {
           ))}
         </div>
       </div>
-
-      {/* Изчисти всички */}
       <button
         onClick={clearAllFilters}
         className="text-sm text-primary-600 hover:text-primary-700 underline"
@@ -255,7 +239,6 @@ function SearchResults() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="mb-6">
           <Link href="/" className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-4">
             <ArrowLeft className="w-5 h-5 mr-2" />
@@ -268,8 +251,6 @@ function SearchResults() {
               </h1>
               {date && <p className="text-gray-600 mt-1">{formatDateShort(date)}</p>}
             </div>
-
-            {/* Sort & Mobile Filter Button */}
             <div className="flex items-center gap-3">
               <select
                 value={sortBy}
@@ -281,8 +262,6 @@ function SearchResults() {
                 <option value="price-asc">💰 Най-евтини</option>
                 <option value="duration-asc">⚡ Най-бързи</option>
               </select>
-
-              {/* Mobile Filter Button */}
               <button
                 onClick={() => setShowMobileFilters(!showMobileFilters)}
                 className="md:hidden btn-primary flex items-center gap-2 py-2 px-4"
@@ -293,8 +272,6 @@ function SearchResults() {
             </div>
           </div>
         </div>
-
-        {/* Results count */}
         <div className="mb-4 text-sm text-gray-600">
           {loading ? (
             'Търсене...'
@@ -305,18 +282,13 @@ function SearchResults() {
             </>
           )}
         </div>
-
-        {/* Layout: Filters + Results */}
         <div className="flex gap-6">
-          {/* Desktop Filters Sidebar */}
           <aside className="hidden md:block w-64 flex-shrink-0">
             <div className="card sticky top-4">
               <h2 className="text-lg font-semibold mb-4 pb-4 border-b">Филтри</h2>
               <FiltersContent />
             </div>
           </aside>
-
-          {/* Mobile Filters Drawer */}
           {showMobileFilters && (
             <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setShowMobileFilters(false)}>
               <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-6 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
@@ -328,8 +300,6 @@ function SearchResults() {
               </div>
             </div>
           )}
-
-          {/* Results */}
           <div className="flex-1">
             {loading ? (
               <div className="space-y-4">

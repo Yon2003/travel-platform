@@ -12,14 +12,11 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Изтрий изтекли резервации
         await supabase
             .from('seat_reservations')
             .delete()
             .lt('reserved_until', new Date().toISOString());
 
-        // Провери дали местата са свободни
-        // Провери временни резервации от други потребители
         const { data: tempReserved, error: tempError } = await supabase
             .from('seat_reservations')
             .select('seat_number')
@@ -30,7 +27,6 @@ export async function POST(request: NextRequest) {
 
         if (tempError) throw tempError;
 
-        // Провери постоянни bookings
         const { data: permanentBooked, error: bookError } = await supabase
             .from('bookings')
             .select('seats')
@@ -39,7 +35,6 @@ export async function POST(request: NextRequest) {
 
         if (bookError) throw bookError;
 
-        // Събери всички заети места
         const tempTaken = tempReserved?.map(r => r.seat_number) || [];
         const permTaken = permanentBooked?.flatMap(b => b.seats).filter(s => seats.includes(s)) || [];
         const allTaken = [...new Set([...tempTaken, ...permTaken])];
@@ -51,7 +46,6 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Резервирай места за 5 минути
         const reservedUntil = new Date(Date.now() + 5 * 60 * 1000).toISOString();
 
         const reservations = seats.map((seatNumber: number) => ({
@@ -81,7 +75,6 @@ export async function POST(request: NextRequest) {
     }
 }
 
-// ДОБАВИ ТОВА СЛЕД POST ФУНКЦИЯТА ↓↓↓
 
 export async function DELETE(request: NextRequest) {
     try {
@@ -94,7 +87,6 @@ export async function DELETE(request: NextRequest) {
             );
         }
 
-        // Изтрий всички резервации на този потребител за този курс
         const { error } = await supabase
             .from('seat_reservations')
             .delete()

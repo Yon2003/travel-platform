@@ -17,8 +17,6 @@ export default function TripCard({ trip }: TripCardProps) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
 
         <div className="flex-1 space-y-3">
-
-          {/* Тип и превозвач */}
           <div className="flex items-center space-x-3">
             <span className="text-3xl">{getTransportIcon(trip.type)}</span>
             <div>
@@ -28,8 +26,6 @@ export default function TripCard({ trip }: TripCardProps) {
               <p className="text-sm text-gray-500">{trip.carrier}</p>
             </div>
           </div>
-
-          {/* Часове */}
           <div className="flex items-center space-x-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-gray-900">
@@ -66,7 +62,6 @@ export default function TripCard({ trip }: TripCardProps) {
             </div>
           </div>
 
-          {/* Локации */}
           <div className="flex items-start space-x-2 text-sm text-gray-600">
             <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
             <div>
@@ -75,14 +70,12 @@ export default function TripCard({ trip }: TripCardProps) {
             </div>
           </div>
 
-          {/* Места */}
           <div className="flex items-center space-x-2 text-sm text-gray-600">
             <Users className="w-4 h-4" />
             <span>Свободни места: {trip.availableSeats}</span>
           </div>
         </div>
 
-        {/* Цена и бутон */}
         <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center gap-4 md:gap-3 pt-4 md:pt-0 border-t md:border-t-0 md:border-l md:pl-6">
           <div className="text-center md:text-right">
             <div className="text-3xl font-bold text-primary-600">

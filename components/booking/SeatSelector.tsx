@@ -28,42 +28,38 @@ export default function SeatSelector({
   onSeatsSelected,
   maxSeats = 5,
 }: SeatSelectorProps) {
-  const { user } = useAuth(); // ДОБАВИ ТОВА
+  const { user } = useAuth();
   const [seats, setSeats] = useState<Seat[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
 
-  // Генерирай места
-  // Зареди заети места от сървъра
-// Резервирай избраните места
-useEffect(() => {
-  async function fetchSeats() {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/seats/${tripId}`);
-      if (!response.ok) throw new Error('Failed to fetch seats');
-      
-      const { takenSeats } = await response.json();
-      const layout = getLayoutForTransport(transportType, totalSeats, takenSeats);
-      setSeats(layout);
-    } catch (error) {
-      console.error('Error fetching seats:', error);
-      const layout = getLayoutForTransport(transportType, totalSeats, []);
-      setSeats(layout);
-    } finally {
-      setLoading(false);
-    }
-  }
 
-  if (tripId) {
-    fetchSeats();
-    
-    // ДОБАВИ ТОВА: Refresh на всеки 10 секунди
-    const interval = setInterval(fetchSeats, 10000);
-    return () => clearInterval(interval);
-  }
-}, [tripId, totalSeats, transportType]);
+  useEffect(() => {
+    async function fetchSeats() {
+      setLoading(true);
+      try {
+        const response = await fetch(`/api/seats/${tripId}`);
+        if (!response.ok) throw new Error('Failed to fetch seats');
+
+        const { takenSeats } = await response.json();
+        const layout = getLayoutForTransport(transportType, totalSeats, takenSeats);
+        setSeats(layout);
+      } catch (error) {
+        console.error('Error fetching seats:', error);
+        const layout = getLayoutForTransport(transportType, totalSeats, []);
+        setSeats(layout);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (tripId) {
+      fetchSeats();
+      const interval = setInterval(fetchSeats, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [tripId, totalSeats, transportType]);
 
 
 
@@ -76,7 +72,7 @@ useEffect(() => {
       // Deselect
       const newSelected = selectedSeats.filter((n) => n !== seatNumber);
       setSelectedSeats(newSelected);
-      onSeatsSelected(newSelected);  // ← ТОВА ИЗВИКВА родителя
+      onSeatsSelected(newSelected);
     } else {
       // Select
       if (selectedSeats.length >= maxSeats) {
@@ -85,7 +81,7 @@ useEffect(() => {
       }
       const newSelected = [...selectedSeats, seatNumber];
       setSelectedSeats(newSelected);
-      onSeatsSelected(newSelected);  // ← И ТОВА
+      onSeatsSelected(newSelected);
     }
   };
 
@@ -107,8 +103,6 @@ useEffect(() => {
         return baseClass;
     }
   };
-
-  // Групирай места по редове
   const rows = seats.reduce((acc, seat) => {
     if (!acc[seat.row]) acc[seat.row] = [];
     acc[seat.row].push(seat);
@@ -118,12 +112,9 @@ useEffect(() => {
   return (
     <div className="space-y-6">
 
-      {/* Header */}
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-semibold">Изберете места</h3>
       </div>
-
-      {/* Legend */}
       <div className="flex flex-wrap gap-4 text-sm">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-gray-100 border-2 border-gray-300 rounded"></div>
@@ -139,18 +130,13 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* Seat Map */}
       <div className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
-
-        {/* Driver */}
         <div className="flex justify-end mb-6">
           <div className="bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
             <User className="w-4 h-4" />
             <span className="text-sm">Водач</span>
           </div>
         </div>
-
-        {/* Seats Grid */}
         <div className="space-y-3">
           {Object.keys(rows)
             .sort((a, b) => Number(a) - Number(b))
@@ -158,12 +144,9 @@ useEffect(() => {
               const rowSeats = rows[Number(rowNum)].sort((a, b) =>
                 a.position.localeCompare(b.position)
               );
-
               return (
                 <div key={rowNum} className="flex items-center justify-center space-x-3">
                   <span className="w-8 text-sm text-gray-500 text-center">{rowNum}</span>
-
-                  {/* Left side (A, B) */}
                   {rowSeats
                     .filter((s) => s.position === 'A' || s.position === 'B')
                     .map((seat) => (
@@ -178,11 +161,7 @@ useEffect(() => {
                         {seat.number}
                       </button>
                     ))}
-
-                  {/* Aisle */}
                   <div className="w-8"></div>
-
-                  {/* Right side (C, D) */}
                   {rowSeats
                     .filter((s) => s.position === 'C' || s.position === 'D')
                     .map((seat) => (
@@ -202,8 +181,6 @@ useEffect(() => {
             })}
         </div>
       </div>
-
-      {/* Selected Summary */}
       {selectedSeats.length > 0 && (
         <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
           <div className="flex items-center justify-between">
@@ -231,7 +208,6 @@ useEffect(() => {
   );
 }
 
-// Helper function за генериране на места според типа превоз
 function getLayoutForTransport(
   type: 'train' | 'bus' | 'minibus',
   total: number,

@@ -46,8 +46,6 @@ export default function SearchForm() {
   return (
     <form onSubmit={handleSubmit} className="card max-w-4xl mx-auto">
       <div className="space-y-6">
-
-        {/* От / До */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -93,8 +91,6 @@ export default function SearchForm() {
             </div>
           </div>
         </div>
-
-        {/* Дата */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Дата *
@@ -111,8 +107,6 @@ export default function SearchForm() {
             />
           </div>
         </div>
-
-        {/* Транспорт */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">
             Транспорт
@@ -138,8 +132,6 @@ export default function SearchForm() {
             ))}
           </div>
         </div>
-
-        {/* Бутон */}
         <button type="submit" className="btn-primary w-full flex items-center justify-center space-x-2">
           <Search className="w-5 h-5" />
           <span>Търси курсове</span>

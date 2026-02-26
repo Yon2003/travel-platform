@@ -7,7 +7,6 @@ export default function Home() {
   return (
     <div className="min-h-[calc(100vh-4rem)]">
 
-      {/* Hero */}
       <div className="bg-gradient-to-br from-primary-600 to-primary-800 text-white py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm font-medium tracking-widest uppercase text-primary-200 mb-4">
@@ -22,12 +21,9 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Search Form */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 pb-16">
         <SearchForm />
       </div>
-
-      {/* Защо ние */}
       <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
@@ -58,8 +54,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      {/* Популярни маршрути */}
       <div className="bg-gray-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
