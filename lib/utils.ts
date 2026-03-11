@@ -8,7 +8,7 @@ export function formatDuration(minutes: number): string {
 }
 
 export function formatPrice(price: number): string {
-  return `${price.toFixed(2)} eu`;
+  return `€${price.toFixed(2)}`;
 }
 
 export function getTransportIcon(type: TransportType): string {

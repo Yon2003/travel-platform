@@ -31,7 +31,6 @@ export default function SearchForm() {
       .map(([mode]) => mode)
       .join(',');
 
-    console.log('🔍 Searching with:', { from, to, date, modes }); // DEBUG
 
     router.push(`/search?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&date=${date}&modes=${modes || 'train,bus,minibus'}`);
   };

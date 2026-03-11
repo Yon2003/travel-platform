@@ -191,9 +191,9 @@ function SearchResults() {
         <h3 className="font-semibold text-gray-900 mb-3">Цена</h3>
         <div className="space-y-2">
           {[
-            { value: 'low' as PriceFilter, label: '💰 До 10 лв' },
-            { value: 'medium' as PriceFilter, label: '💵 10-20 лв' },
-            { value: 'high' as PriceFilter, label: '💶 20+ лв' },
+            { value: 'low' as PriceFilter, label: '💰 До €10' },
+            { value: 'medium' as PriceFilter, label: '💵 €10-€20' },
+            { value: 'high' as PriceFilter, label: '💶 €20+' },
           ].map(({ value, label }) => (
             <label key={value} className="flex items-center space-x-2 cursor-pointer">
               <input
