@@ -26,6 +26,7 @@ export default function Navbar() {
                   <BookMarked className="w-5 h-5" />
                   <span className="hidden sm:inline">Резервации</span>
                 </Link>
+
                 <Link
                   href="/profile"
                   className="flex items-center space-x-2 text-gray-700 hover:text-primary-600 transition-colors"
@@ -33,6 +34,15 @@ export default function Navbar() {
                   <User className="w-5 h-5" />
                   <span className="hidden sm:inline">Профил</span>
                 </Link>
+
+                <Link
+                  href="/loyalty"
+                  className="flex items-center space-x-2 text-gray-700 hover:text-primary-600 transition-colors"
+                >
+                  <span>🎯</span>
+                  <span className="hidden sm:inline">Точки</span>
+                </Link>
+
                 <button
                   onClick={() => signOut()}
                   className="flex items-center space-x-2 text-gray-700 hover:text-red-600 transition-colors"

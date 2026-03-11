@@ -8,35 +8,21 @@ export async function GET(
   try {
     const { tripId } = await context.params;
 
-    await supabase
-      .from('seat_reservations')
-      .delete()
-      .lt('reserved_until', new Date().toISOString());
-
-    const { data: reservations, error } = await supabase
-      .from('seat_reservations')
-      .select('seat_number')
-      .eq('trip_id', tripId)
-      .gt('reserved_until', new Date().toISOString());
+    // Вземи bookings за конкретния trip
+    const { data: bookings, error } = await supabase
+      .from('bookings')
+      .select('seats, trip_id')
+      .eq('trip_id', parseInt(tripId))
+      .in('status', ['confirmed', 'pending']);
 
     if (error) throw error;
 
-    const { data: bookings, error: bookingsError } = await supabase
-      .from('bookings')
-      .select('seats')
-      .eq('trip_id', tripId)
-      .in('status', ['confirmed', 'pending']);
-
-    if (bookingsError) throw bookingsError;
-
-    const tempReservedSeats = reservations?.map(r => r.seat_number) || [];
-    const permanentBookedSeats = bookings?.flatMap(b => b.seats) || [];
-    const allTakenSeats = [...new Set([...tempReservedSeats, ...permanentBookedSeats])];
+    // Събери всички заети места
+    const takenSeats = bookings?.flatMap(b => b.seats) || [];
 
     return NextResponse.json({ 
-      takenSeats: allTakenSeats,
-      reservedSeats: tempReservedSeats,
-      bookedSeats: permanentBookedSeats
+      takenSeats: takenSeats,
+      bookedSeats: takenSeats
     });
   } catch (error) {
     console.error('Error fetching seat status:', error);

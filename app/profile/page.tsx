@@ -4,6 +4,7 @@ import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import Link from 'next/link';
 import { formatPrice, formatDateShort, getTransportIcon } from '@/lib/utils';
 import { Calendar, MapPin, Ticket, User, Mail, CreditCard } from 'lucide-react';
 
@@ -83,9 +84,8 @@ export default function ProfilePage() {
         .eq('id', bookingId);
 
       if (error) throw error;
-
       // Refresh bookings
-      setBookings(bookings.map(b => 
+      setBookings(bookings.map(b =>
         b.id === bookingId ? { ...b, status: 'cancelled' as const } : b
       ));
 
@@ -125,7 +125,6 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-6xl mx-auto">
-        
         <div className="card mb-8">
           <div className="flex items-start justify-between">
             <div>
@@ -232,15 +231,26 @@ export default function ProfilePage() {
                     </div>
                     <div className="flex flex-col items-end space-y-3">
                       {getStatusBadge(booking.status)}
-                      
-                      {booking.status === 'pending' && (
-                        <button
-                          onClick={() => handleCancelBooking(booking.id)}
-                          className="text-sm text-red-600 hover:text-red-700 hover:underline"
-                        >
-                          Анулирай
-                        </button>
-                      )}
+                      <div className="flex flex-col space-y-2">
+                        {booking.status === 'confirmed' && (
+                          <Link
+                            href={`/ticket/${booking.id}`}
+                            className="btn-primary text-sm px-4 py-2 inline-flex items-center justify-center space-x-2"
+                          >
+                            <span>🎫</span>
+                            <span>Виж билет</span>
+                          </Link>
+                        )}
+
+                        {booking.status === 'pending' && (
+                          <button
+                            onClick={() => handleCancelBooking(booking.id)}
+                            className="text-sm text-red-600 hover:text-red-700 hover:underline"
+                          >
+                            Анулирай
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
