@@ -136,7 +136,7 @@ export default function LoyaltyPage() {
                             <h3 className="text-2xl font-bold mb-6 text-center">💡 Как работи?</h3>
                             <div className="space-y-6">
                                 <div className="flex items-start space-x-4">
-                                    <div className="bg-primary-600 text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold">
+                                    <div className="bg-primary-600 text-white rounded-full w-10 h-10 flex items-center justify-center shrink-0 font-bold">
                                         1
                                     </div>
                                     <div>
@@ -146,7 +146,7 @@ export default function LoyaltyPage() {
                                 </div>
 
                                 <div className="flex items-start space-x-4">
-                                    <div className="bg-primary-600 text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold">
+                                    <div className="bg-primary-600 text-white rounded-full w-10 h-10 flex items-center justify-center shrink-0 font-bold">
                                         2
                                     </div>
                                     <div>
@@ -160,7 +160,7 @@ export default function LoyaltyPage() {
                                 </div>
 
                                 <div className="flex items-start space-x-4">
-                                    <div className="bg-primary-600 text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 font-bold">
+                                    <div className="bg-primary-600 text-white rounded-full w-10 h-10 flex items-center justify-center shrink-0 font-bold">
                                         3
                                     </div>
                                     <div>
