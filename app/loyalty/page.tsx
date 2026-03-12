@@ -119,7 +119,6 @@ export default function LoyaltyPage() {
         );
     }
 
-    // Empty state - no points yet
     if (!loyalty || loyalty.total_earned === 0) {
         return (
             <div className="min-h-screen bg-linear-to-br from-gray-50 via-primary-50/30 to-accent-50/20 py-8">
@@ -185,7 +184,6 @@ export default function LoyaltyPage() {
         <div className="min-h-screen bg-linear-to-br from-gray-50 via-primary-50/30 to-accent-50/20 py-8">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-4xl font-black mb-2 bg-clip-text text-transparent bg-linear-to-r from-primary-600 to-accent-600">
                         Лоялност Точки
@@ -193,7 +191,6 @@ export default function LoyaltyPage() {
                     <p className="text-gray-600">Спестете при следващо пътуване</p>
                 </div>
 
-                {/* Main Card */}
                 <div className="card bg-linear-to-br from-primary-500 to-accent-500 text-white mb-6 relative overflow-hidden">
                     <div className="absolute top-0 right-0 text-9xl opacity-10">
                         🎯
@@ -205,11 +202,9 @@ export default function LoyaltyPage() {
                             <h2 className="text-7xl font-black">{loyalty?.points || 0}</h2>
                         </div>
 
-                        {/* Next Voucher Progress */}
                         {(() => {
                             const points = loyalty?.points || 0;
 
-                            // Ако може да размени за 20%
                             if (points >= 200) {
                                 return (
                                     <div className="text-center py-4">
@@ -219,7 +214,6 @@ export default function LoyaltyPage() {
                                 );
                             }
 
-                            // Ако може да размени за 10%
                             if (points >= 100) {
                                 const pointsToNext = 200 - points;
                                 return (
@@ -244,7 +238,6 @@ export default function LoyaltyPage() {
                                 );
                             }
 
-                            // Ако може да размени за 5%
                             if (points >= 50) {
                                 const pointsToNext = 100 - points;
                                 return (
@@ -269,7 +262,6 @@ export default function LoyaltyPage() {
                                 );
                             }
 
-                            // Ако има под 50 точки
                             const pointsToNext = 50 - points;
                             return (
                                 <div>
@@ -292,7 +284,6 @@ export default function LoyaltyPage() {
                     </div>
                 </div>
 
-                {/* Redeem Vouchers */}
                 <div className="card mb-8">
                     <h3 className="text-2xl font-bold mb-6 flex items-center space-x-2">
                         <Gift className="w-6 h-6 text-accent-600" />
@@ -348,7 +339,6 @@ export default function LoyaltyPage() {
                     </p>
                 </div>
 
-                {/* My Vouchers */}
                 {vouchers.length > 0 && (
                     <div className="card mb-8">
                         <h3 className="text-xl font-bold mb-4">🎫 Моите купони</h3>
@@ -375,7 +365,6 @@ export default function LoyaltyPage() {
                                                 </p>
                                             </div>
 
-                                            {/* Copy button */}
                                             {!isUsed && !isExpired && (
                                                 <button
                                                     onClick={() => {
@@ -409,7 +398,6 @@ export default function LoyaltyPage() {
                     </div>
                 )}
 
-                {/* How it works */}
                 <div className="card">
                     <h3 className="text-xl font-bold mb-4">💡 Как работи?</h3>
                     <ul className="space-y-3 text-gray-700">
@@ -428,7 +416,6 @@ export default function LoyaltyPage() {
                     </ul>
                 </div>
 
-                {/* CTA */}
                 <div className="mt-8 text-center">
                     <Link href="/" className="btn-primary inline-block">
                         Резервирай пътуване

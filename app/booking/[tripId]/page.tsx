@@ -370,8 +370,13 @@ export default function BookingPage({ params }: BookingPageProps) {
                     onChange={(e) => setPassengerPhone(e.target.value)}
                     className="input-field"
                     required
-                    placeholder="0888 123 456"
+                    placeholder="0888 123 456 или +359 888 123 456"
+                    pattern="^(\+359|0)[0-9]{9}$"
+                    title="Моля въведете валиден български телефонен номер (напр. 0888123456 или +359888123456)"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Формат: 0888123456 или +359888123456
+                  </p>
                 </div>
 
                 <div>

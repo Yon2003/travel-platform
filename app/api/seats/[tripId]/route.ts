@@ -8,7 +8,6 @@ export async function GET(
   try {
     const { tripId } = await context.params;
 
-    // Вземи bookings за конкретния trip
     const { data: bookings, error } = await supabase
       .from('bookings')
       .select('seats, trip_id')
@@ -17,7 +16,6 @@ export async function GET(
 
     if (error) throw error;
 
-    // Събери всички заети места
     const takenSeats = bookings?.flatMap(b => b.seats) || [];
 
     return NextResponse.json({ 

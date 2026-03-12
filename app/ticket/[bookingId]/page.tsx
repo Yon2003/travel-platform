@@ -135,10 +135,9 @@ export default function TicketPage({ params }: TicketPageProps) {
   const qrData = `TICKET:${booking.booking_reference}|${trip.from_city}-${trip.to_city}|${trip.departure_date}|${booking.passenger_name}`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-primary-50/30 to-accent-50/20 py-8 print:bg-white">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 via-primary-50/30 to-accent-50/20 py-8 print:bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header - Hide on print */}
         <div className="mb-6 print:hidden">
           <Link
             href="/profile"
@@ -160,11 +159,8 @@ export default function TicketPage({ params }: TicketPageProps) {
           </div>
         </div>
 
-        {/* Ticket */}
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border-4 border-primary-500 print:border-2 print:shadow-none">
-          
-          {/* Header with barcode pattern */}
-          <div className="bg-gradient-to-r from-primary-600 to-accent-600 text-white p-6 relative overflow-hidden">
+          <div className="bg-linear-to-r from-primary-600 to-accent-600 text-white p-6 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
             <div className="relative z-10 flex items-center justify-between">
               <div>
@@ -182,14 +178,9 @@ export default function TicketPage({ params }: TicketPageProps) {
             </div>
           </div>
 
-          {/* Main Content */}
           <div className="p-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              
-              {/* Left: Trip Info */}
               <div className="lg:col-span-2 space-y-6">
-                
-                {/* Passenger */}
                 <div>
                   <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Пътник</h3>
                   <p className="text-2xl font-bold text-gray-900">{booking.passenger_name}</p>
@@ -197,7 +188,6 @@ export default function TicketPage({ params }: TicketPageProps) {
                   <p className="text-gray-600">{booking.passenger_phone}</p>
                 </div>
 
-                {/* Transport */}
                 <div>
                   <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Превоз</h3>
                   <div className="flex items-center space-x-3">
@@ -210,8 +200,7 @@ export default function TicketPage({ params }: TicketPageProps) {
                   </div>
                 </div>
 
-                {/* Route */}
-                <div className="bg-gradient-to-r from-primary-50 to-accent-50 rounded-xl p-6">
+                <div className="bg-linear-to-r from-primary-50 to-accent-50 rounded-xl p-6">
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-3xl font-black text-gray-900">{trip.from_city}</h3>
@@ -228,7 +217,6 @@ export default function TicketPage({ params }: TicketPageProps) {
                   </div>
                 </div>
 
-                {/* Date & Time */}
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <h3 className="text-sm font-semibold text-gray-500 uppercase mb-1">Дата</h3>
@@ -250,7 +238,6 @@ export default function TicketPage({ params }: TicketPageProps) {
                   </div>
                 </div>
 
-                {/* Seats & Price */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <h3 className="text-sm font-semibold text-gray-500 uppercase mb-1">Места</h3>
@@ -268,7 +255,6 @@ export default function TicketPage({ params }: TicketPageProps) {
 
               </div>
 
-              {/* Right: QR Code */}
               <div className="flex flex-col items-center justify-end space-y-4">
                 <div className="bg-white p-4 rounded-xl shadow-lg border-2 border-gray-200">
                   <QRCodeSVG
@@ -278,7 +264,7 @@ export default function TicketPage({ params }: TicketPageProps) {
                     includeMargin={true}
                   />
                 </div>
-                <p className="text-xs text-center text-gray-500 max-w-[200px]">
+                <p className="text-xs text-center text-gray-500 max-w-50">
                   Сканирайте този код при качване
                 </p>
               </div>
@@ -300,11 +286,10 @@ export default function TicketPage({ params }: TicketPageProps) {
 
         </div>
 
-        {/* Instructions - Hide on print */}
         <div className="mt-6 print:hidden">
           <div className="bg-blue-50 border-l-4 border-blue-600 p-4 rounded">
             <div className="flex">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <svg className="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>

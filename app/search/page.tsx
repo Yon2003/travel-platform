@@ -24,7 +24,6 @@ function SearchResults() {
   const date = searchParams.get('date') || '';
   const modesParam = searchParams.get('modes') || 'train,bus,minibus';
 
-  // Филтри
   const [selectedTimes, setSelectedTimes] = useState<TimeFilter[]>([]);
   const [selectedModes, setSelectedModes] = useState<string[]>(modesParam.split(','));
   const [selectedPrices, setSelectedPrices] = useState<PriceFilter[]>([]);
@@ -283,7 +282,7 @@ function SearchResults() {
           )}
         </div>
         <div className="flex gap-6">
-          <aside className="hidden md:block w-64 flex-shrink-0">
+          <aside className="hidden md:block w-64 shrink-0">
             <div className="card sticky top-4">
               <h2 className="text-lg font-semibold mb-4 pb-4 border-b">Филтри</h2>
               <FiltersContent />

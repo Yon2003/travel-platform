@@ -84,7 +84,6 @@ export default function ProfilePage() {
         .eq('id', bookingId);
 
       if (error) throw error;
-      // Refresh bookings
       setBookings(bookings.map(b =>
         b.id === bookingId ? { ...b, status: 'cancelled' as const } : b
       ));
