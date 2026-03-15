@@ -133,7 +133,7 @@ export default function SearchForm() {
         </div>
         <button type="submit" className="btn-primary w-full flex items-center justify-center space-x-2">
           <Search className="w-5 h-5" />
-          <span>Търси курсове</span>
+          <span>Търси пътувания</span>
         </button>
       </div>
     </form>
