@@ -7,7 +7,8 @@ import Link from 'next/link';
 export default function RegisterPage() {
   const { signUp } = useAuth();
   const router = useRouter();
-  const [fullName, setFullName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -19,6 +20,8 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
+      // Комбинираме име + фамилия
+      const fullName = `${firstName} ${lastName}`;
       await signUp(email, password, fullName);
       router.push('/profile');
     } catch (err: any) {
@@ -45,14 +48,29 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Пълно име
+              Име
             </label>
             <input
               type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               className="input-field"
               required
+              placeholder="Иван"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Фамилия
+            </label>
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className="input-field"
+              required
+              placeholder="Иванов"
             />
           </div>
 
@@ -66,6 +84,7 @@ export default function RegisterPage() {
               onChange={(e) => setEmail(e.target.value)}
               className="input-field"
               required
+              placeholder="ivan@example.com"
             />
           </div>
 
@@ -80,6 +99,7 @@ export default function RegisterPage() {
               className="input-field"
               required
               minLength={6}
+              placeholder="Поне 6 символа"
             />
           </div>
 
