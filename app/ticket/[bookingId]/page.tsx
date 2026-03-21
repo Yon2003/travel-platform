@@ -157,20 +157,20 @@ export default function TicketPage({ params }: TicketPageProps) {
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
 
           {/* Header */}
-          <div className="text-white p-6 relative overflow-hidden" style={{background: 'linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%)'}}>
+          <div className="p-6 relative overflow-hidden print:border-b-2 print:border-gray-300" style={{background: 'linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%)', WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact'}}>
             <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full opacity-10 bg-white"></div>
             <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-10 bg-white"></div>
             <div className="relative z-10 flex items-start justify-between">
               <div>
-                <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">ПътуванеБГ</p>
-                <h2 className="text-2xl font-black">ЕЛЕКТРОНЕН БИЛЕТ</h2>
-                <span className="inline-block mt-2 text-xs font-bold px-2 py-1 rounded-full bg-white/20">
+                <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{color: '#bfdbfe'}}>ПътуванеБГ</p>
+                <h2 className="text-2xl font-black text-white">ЕЛЕКТРОНЕН БИЛЕТ</h2>
+                <span className="inline-block mt-2 text-xs font-bold px-2 py-1 rounded-full text-white" style={{backgroundColor: 'rgba(255,255,255,0.2)'}}>
                   {statusLabel}
                 </span>
               </div>
               <div className="text-right">
-                <p className="text-blue-200 text-xs mb-1">Референтен код</p>
-                <div className="font-mono font-bold text-lg bg-white/20 px-3 py-1 rounded-lg tracking-widest">
+                <p className="text-xs mb-1" style={{color: '#bfdbfe'}}>Референтен код</p>
+                <div className="font-mono font-bold text-lg px-3 py-1 rounded-lg tracking-widest text-white" style={{backgroundColor: 'rgba(255,255,255,0.2)'}}>
                   {booking.booking_reference}
                 </div>
               </div>
