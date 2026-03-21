@@ -121,11 +121,11 @@ export default function LoyaltyPage() {
 
     if (!loyalty || loyalty.total_earned === 0) {
         return (
-            <div className="min-h-screen bg-linear-to-br from-gray-50 via-primary-50/30 to-accent-50/20 py-8">
+            <div className="min-h-screen bg-linear-to-br from-gray-50 via-primary-50/30 to-primary-50/20 py-8">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center py-16">
                         <div className="text-8xl mb-6">🎯</div>
-                        <h1 className="text-4xl font-black mb-4 bg-clip-text text-transparent bg-linear-to-r from-primary-600 to-accent-600">
+                        <h1 className="text-4xl font-black mb-4 bg-clip-text text-transparent bg-linear-to-r from-primary-600 to-primary-800">
                             Добре дошли в програмата за лоялност!
                         </h1>
                         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
@@ -181,11 +181,11 @@ export default function LoyaltyPage() {
     }
 
     return (
-        <div className="min-h-screen bg-linear-to-br from-gray-50 via-primary-50/30 to-accent-50/20 py-8">
+        <div className="min-h-screen bg-linear-to-br from-gray-50 via-primary-50/30 to-primary-50/20 py-8">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 <div className="mb-8">
-                    <h1 className="text-4xl font-black mb-2 bg-clip-text text-transparent bg-linear-to-r from-primary-600 to-accent-600">
+                    <h1 className="text-4xl font-black mb-2 bg-clip-text text-transparent bg-linear-to-r from-primary-600 to-primary-800">
                         Лоялност Точки
                     </h1>
                     <p className="text-gray-600">Спестете при следващо пътуване</p>
@@ -286,7 +286,7 @@ export default function LoyaltyPage() {
 
                 <div className="card mb-8">
                     <h3 className="text-2xl font-bold mb-6 flex items-center space-x-2">
-                        <Gift className="w-6 h-6 text-accent-600" />
+                        <Gift className="w-6 h-6 text-primary-600" />
                         <span>Размени точки за купон</span>
                     </h3>
 
@@ -308,11 +308,11 @@ export default function LoyaltyPage() {
                                 <div
                                     key={offer.discount}
                                     className={`border-2 rounded-xl p-6 text-center transition-all ${canRedeem
-                                        ? 'border-accent-500 bg-accent-50 hover:shadow-lg'
+                                        ? 'border-primary-500 bg-primary-50 hover:shadow-lg'
                                         : 'border-gray-300 bg-gray-50 opacity-60'
                                         }`}
                                 >
-                                    <div className="text-4xl font-black text-accent-600 mb-2">
+                                    <div className="text-4xl font-black text-primary-600 mb-2">
                                         {offer.discount}%
                                     </div>
                                     <p className="text-sm text-gray-600 mb-4">ОТСТЪПКА</p>
@@ -323,7 +323,7 @@ export default function LoyaltyPage() {
                                         onClick={() => handleRedeem(offer.discount, offer.cost)}
                                         disabled={!canRedeem || redeeming}
                                         className={`w-full py-2 px-4 rounded-lg font-semibold transition-colors ${canRedeem
-                                            ? 'bg-accent-600 text-white hover:bg-accent-700'
+                                            ? 'bg-primary-600 text-white hover:bg-primary-700'
                                             : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                             }`}
                                     >
@@ -352,7 +352,7 @@ export default function LoyaltyPage() {
                                         key={voucher.id}
                                         className={`border-2 rounded-lg p-4 ${isUsed || isExpired
                                             ? 'border-gray-300 bg-gray-50 opacity-60'
-                                            : 'border-accent-500 bg-accent-50'
+                                            : 'border-primary-500 bg-primary-50'
                                             }`}
                                     >
                                         <div className="flex items-center justify-between">
