@@ -178,26 +178,26 @@ export default function TicketPage({ params }: TicketPageProps) {
           </div>
 
           {/* Route strip */}
-          <div className="bg-primary-50 px-6 py-5 border-b border-gray-200">
+          <div className="bg-primary-50 px-4 sm:px-6 py-5 border-b border-gray-200">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-3xl font-black text-gray-900">{trip.from_city}</p>
-                <p className="text-sm text-gray-500 mt-1">{trip.departure_location}</p>
-                <p className="text-2xl font-bold text-primary-600 mt-1">{trip.departure_time}</p>
+              <div className="min-w-0">
+                <p className="text-xl sm:text-3xl font-black text-gray-900 truncate">{trip.from_city}</p>
+                <p className="text-xs sm:text-sm text-gray-500 mt-1 truncate">{trip.departure_location}</p>
+                <p className="text-lg sm:text-2xl font-bold text-primary-600 mt-1">{trip.departure_time}</p>
               </div>
-              <div className="flex flex-col items-center px-4">
-                <span className="text-2xl">{getTransportIcon(trip.transport_type as any)}</span>
+              <div className="flex flex-col items-center px-2 sm:px-4 shrink-0">
+                <span className="text-xl sm:text-2xl">{getTransportIcon(trip.transport_type as any)}</span>
                 <div className="flex items-center my-2">
-                  <div className="w-4 h-0.5 bg-gray-400"></div>
-                  <div className="w-16 h-0.5 bg-primary-400 mx-1"></div>
-                  <div className="w-4 h-0.5 bg-gray-400"></div>
+                  <div className="w-2 sm:w-4 h-0.5 bg-gray-400"></div>
+                  <div className="w-8 sm:w-16 h-0.5 bg-primary-400 mx-1"></div>
+                  <div className="w-2 sm:w-4 h-0.5 bg-gray-400"></div>
                 </div>
                 <p className="text-xs text-gray-500">{Math.floor(trip.duration_minutes / 60)}ч {trip.duration_minutes % 60}м</p>
               </div>
-              <div className="text-right">
-                <p className="text-3xl font-black text-gray-900">{trip.to_city}</p>
-                <p className="text-sm text-gray-500 mt-1">{trip.arrival_location}</p>
-                <p className="text-2xl font-bold text-primary-600 mt-1">{trip.arrival_time}</p>
+              <div className="text-right min-w-0">
+                <p className="text-xl sm:text-3xl font-black text-gray-900 truncate">{trip.to_city}</p>
+                <p className="text-xs sm:text-sm text-gray-500 mt-1 truncate">{trip.arrival_location}</p>
+                <p className="text-lg sm:text-2xl font-bold text-primary-600 mt-1">{trip.arrival_time}</p>
               </div>
             </div>
           </div>
