@@ -191,7 +191,7 @@ export default function LoyaltyPage() {
                     <p className="text-gray-600">Спестете при следващо пътуване</p>
                 </div>
 
-                <div className="card bg-linear-to-br from-primary-500 to-accent-500 text-white mb-6 relative overflow-hidden">
+                <div className="card bg-linear-to-br from-blue-600 to-blue-800 text-white mb-6 relative overflow-hidden">
                     <div className="absolute top-0 right-0 text-9xl opacity-10">
                         🎯
                     </div>
