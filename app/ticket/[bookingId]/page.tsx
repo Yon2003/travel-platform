@@ -147,14 +147,15 @@ export default function TicketPage({ params }: TicketPageProps) {
             Назад към резервации
           </Link>
 
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Електронен билет</h1>
+          <div className="flex items-center justify-between gap-3">
+            <h1 className="text-2xl sm:text-3xl font-bold">Електронен билет</h1>
             <button
               onClick={handlePrint}
-              className="btn-primary flex items-center space-x-2"
+              className="btn-primary flex items-center space-x-2 shrink-0 text-sm sm:text-base px-3 sm:px-6"
             >
-              <Download className="w-5 h-5" />
-              <span>Изтегли / Принтирай</span>
+              <Download className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">Изтегли / Принтирай</span>
+              <span className="sm:hidden">Принтирай</span>
             </button>
           </div>
         </div>
@@ -178,8 +179,8 @@ export default function TicketPage({ params }: TicketPageProps) {
             </div>
           </div>
 
-          <div className="p-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="p-4 sm:p-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
               <div className="lg:col-span-2 space-y-6">
                 <div>
                   <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Пътник</h3>
@@ -200,19 +201,19 @@ export default function TicketPage({ params }: TicketPageProps) {
                   </div>
                 </div>
 
-                <div className="bg-linear-to-r from-primary-50 to-accent-50 rounded-xl p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-3xl font-black text-gray-900">{trip.from_city}</h3>
-                      <p className="text-sm text-gray-600 mt-1">{trip.departure_location}</p>
+                <div className="bg-linear-to-r from-primary-50 to-accent-50 rounded-xl p-4 sm:p-6">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <h3 className="text-xl sm:text-3xl font-black text-gray-900 truncate">{trip.from_city}</h3>
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1 truncate">{trip.departure_location}</p>
                     </div>
-                    <div className="flex flex-col items-center px-4">
-                      <Navigation className="w-8 h-8 text-primary-600 rotate-90" />
-                      <div className="h-1 w-16 bg-primary-600 my-2"></div>
+                    <div className="flex flex-col items-center px-2 sm:px-4 shrink-0">
+                      <Navigation className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 rotate-90" />
+                      <div className="h-1 w-10 sm:w-16 bg-primary-600 my-2"></div>
                     </div>
-                    <div className="text-right">
-                      <h3 className="text-3xl font-black text-gray-900">{trip.to_city}</h3>
-                      <p className="text-sm text-gray-600 mt-1">{trip.arrival_location}</p>
+                    <div className="text-right min-w-0">
+                      <h3 className="text-xl sm:text-3xl font-black text-gray-900 truncate">{trip.to_city}</h3>
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1 truncate">{trip.arrival_location}</p>
                     </div>
                   </div>
                 </div>
@@ -273,12 +274,12 @@ export default function TicketPage({ params }: TicketPageProps) {
           </div>
 
           {/* Footer */}
-          <div className="bg-gray-50 px-8 py-4 border-t-2 border-dashed border-gray-300">
-            <div className="flex items-center justify-between text-xs text-gray-500">
+          <div className="bg-gray-50 px-4 sm:px-8 py-4 border-t-2 border-dashed border-gray-300">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-xs text-gray-500">
               <div>
                 <p>Издаден на: {new Date(booking.created_at).toLocaleString('bg-BG')}</p>
               </div>
-              <div className="text-right">
+              <div className="sm:text-right">
                 <p>ПътуванеБГ · Дигитална транспортна платформа</p>
               </div>
             </div>

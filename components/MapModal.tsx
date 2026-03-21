@@ -33,9 +33,9 @@ export default function MapModal({
                 className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="flex items-center justify-between p-6 border-b">
+                <div className="flex items-center justify-between p-4 sm:p-6 border-b">
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-900">
+                        <h2 className="text-lg sm:text-2xl font-bold text-gray-900">
                             {from} → {to}
                         </h2>
                         <p className="text-sm text-gray-500 mt-1">Маршрут на пътуването</p>
@@ -47,7 +47,7 @@ export default function MapModal({
                         <X className="w-6 h-6" />
                     </button>
                 </div>
-                <div className="p-6">
+                <div className="p-3 sm:p-6">
                     <RouteMap
                         from={from}
                         to={to}
@@ -56,7 +56,7 @@ export default function MapModal({
                         transportType={transportType}
                     />
                 </div>
-                <div className="p-6 border-t bg-gray-50">
+                <div className="p-4 sm:p-6 border-t bg-gray-50">
                     <div className="flex items-center justify-between text-sm">
                         <div>
                             <p className="text-gray-600">Тръгване от:</p>

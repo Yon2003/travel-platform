@@ -125,7 +125,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="card mb-8">
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold mb-2">Моят Профил</h1>
               <div className="space-y-2 text-gray-600">
@@ -228,7 +228,7 @@ export default function ProfilePage() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end space-y-3">
+                    <div className="flex flex-row lg:flex-col items-center lg:items-end justify-between lg:justify-start gap-3 lg:gap-0 lg:space-y-3 pt-3 lg:pt-0 border-t lg:border-t-0">
                       {getStatusBadge(booking.status)}
                       <div className="flex flex-col space-y-2">
                         {booking.status === 'confirmed' && (

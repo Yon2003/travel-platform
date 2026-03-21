@@ -86,7 +86,7 @@ export default function SeatSelector({
   };
 
   const getSeatClass = (seat: Seat) => {
-    const baseClass = 'w-12 h-12 rounded-lg flex items-center justify-center text-sm font-semibold cursor-pointer transition-all hover:scale-110';
+    const baseClass = 'w-9 h-9 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center text-xs sm:text-sm font-semibold cursor-pointer transition-all hover:scale-110';
 
     if (selectedSeats.includes(seat.number)) {
       return `${baseClass} bg-primary-600 text-white shadow-lg`;
@@ -130,8 +130,8 @@ export default function SeatSelector({
         </div>
       </div>
 
-      <div className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
-        <div className="flex justify-end mb-6">
+      <div className="bg-gray-50 rounded-xl p-3 sm:p-6 border-2 border-gray-200">
+        <div className="flex justify-end mb-4 sm:mb-6">
           <div className="bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
             <User className="w-4 h-4" />
             <span className="text-sm">Водач</span>
@@ -145,8 +145,8 @@ export default function SeatSelector({
                 a.position.localeCompare(b.position)
               );
               return (
-                <div key={rowNum} className="flex items-center justify-center space-x-3">
-                  <span className="w-8 text-sm text-gray-500 text-center">{rowNum}</span>
+                <div key={rowNum} className="flex items-center justify-center space-x-1 sm:space-x-3">
+                  <span className="w-6 sm:w-8 text-xs sm:text-sm text-gray-500 text-center">{rowNum}</span>
                   {rowSeats
                     .filter((s) => s.position === 'A' || s.position === 'B')
                     .map((seat) => (
@@ -161,7 +161,7 @@ export default function SeatSelector({
                         {seat.number}
                       </button>
                     ))}
-                  <div className="w-8"></div>
+                  <div className="w-4 sm:w-8"></div>
                   {rowSeats
                     .filter((s) => s.position === 'C' || s.position === 'D')
                     .map((seat) => (

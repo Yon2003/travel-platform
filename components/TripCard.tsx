@@ -63,7 +63,7 @@ export default function TripCard({ trip }: TripCardProps) {
           </div>
 
           <div className="flex items-start space-x-2 text-sm text-gray-600">
-            <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
             <div>
               <div>От: {trip.departureLocation}</div>
               <div>До: {trip.arrivalLocation}</div>

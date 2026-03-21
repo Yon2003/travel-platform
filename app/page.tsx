@@ -7,12 +7,12 @@ export default function Home() {
   return (
     <div className="min-h-[calc(100vh-4rem)]">
 
-      <div className="bg-gradient-to-br from-primary-600 to-primary-800 text-white py-16 md:py-24">
+      <div className="bg-linear-to-br from-primary-600 to-primary-800 text-white py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm font-medium tracking-widest uppercase text-primary-200 mb-4">
             ✦ Българска Транспортна Мрежа ✦
           </p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
             Планирай пътуването си лесно
           </h1>
           <p className="text-xl md:text-2xl text-primary-100 mb-8">

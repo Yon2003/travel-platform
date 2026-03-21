@@ -301,7 +301,7 @@ export default function BookingPage({ params }: BookingPageProps) {
         <h1 className="text-3xl font-bold mb-8">Резервация на билет</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-6 order-2 lg:order-1">
             <div className="card">
               <h2 className="text-xl font-semibold mb-4">Детайли на курса</h2>
               <div className="flex items-start space-x-4">
@@ -388,7 +388,7 @@ export default function BookingPage({ params }: BookingPageProps) {
                       type="text"
                       value={voucherCode}
                       onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
-                      className="input-field flex-1"
+                      className="input-field flex-1 min-w-0"
                       placeholder="VC-XXXXXXXX"
                       disabled={voucherDiscount > 0}
                     />
@@ -397,7 +397,7 @@ export default function BookingPage({ params }: BookingPageProps) {
                         type="button"
                         onClick={handleCheckVoucher}
                         disabled={checkingVoucher || !voucherCode.trim()}
-                        className="btn-primary px-6"
+                        className="btn-primary px-4 sm:px-6 shrink-0"
                       >
                         {checkingVoucher ? 'Проверка...' : 'Приложи'}
                       </button>
@@ -410,7 +410,7 @@ export default function BookingPage({ params }: BookingPageProps) {
                           setAppliedVoucherId(null);
                           setVoucherError('');
                         }}
-                        className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                        className="px-4 sm:px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 shrink-0"
                       >
                         Премахни
                       </button>
@@ -505,8 +505,8 @@ export default function BookingPage({ params }: BookingPageProps) {
             </div>
           </div>
 
-          <div className="lg:col-span-1">
-            <div className="card sticky top-4">
+          <div className="lg:col-span-1 order-1 lg:order-2">
+            <div className="card lg:sticky lg:top-4">
               <h2 className="text-xl font-semibold mb-4">Обобщение</h2>
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
