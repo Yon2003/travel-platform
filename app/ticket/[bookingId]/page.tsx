@@ -134,174 +134,132 @@ export default function TicketPage({ params }: TicketPageProps) {
   const trip = booking.trip;
   const qrData = `TICKET:${booking.booking_reference}|${trip.from_city}-${trip.to_city}|${trip.departure_date}|${booking.passenger_name}`;
 
-  return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 via-primary-50/30 to-accent-50/20 py-8 print:bg-white">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div className="mb-6 print:hidden">
-          <Link
-            href="/profile"
-            className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-4"
-          >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Назад към резервации
-          </Link>
+  const statusColor = booking.status === 'validated' ? '#16a34a' : booking.status === 'cancelled' ? '#dc2626' : '#0284c7';
+  const statusLabel = booking.status === 'validated' ? '✓ Валидиран' : booking.status === 'cancelled' ? '✗ Анулиран' : '● Активен';
 
-          <div className="flex items-center justify-between gap-3">
-            <h1 className="text-2xl sm:text-3xl font-bold">Електронен билет</h1>
-            <button
-              onClick={handlePrint}
-              className="btn-primary flex items-center space-x-2 shrink-0 text-sm sm:text-base px-3 sm:px-6"
-            >
-              <Download className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="hidden sm:inline">Изтегли / Принтирай</span>
-              <span className="sm:hidden">Принтирай</span>
-            </button>
-          </div>
+  return (
+    <div className="min-h-screen bg-gray-100 py-8 print:bg-white">
+      <div className="max-w-3xl mx-auto px-4">
+
+        {/* Toolbar */}
+        <div className="mb-6 print:hidden flex items-center justify-between">
+          <Link href="/profile" className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium">
+            <ArrowLeft className="w-5 h-5 mr-1" />
+            Назад
+          </Link>
+          <button onClick={handlePrint} className="btn-primary flex items-center space-x-2 text-sm px-4 py-2">
+            <Download className="w-4 h-4" />
+            <span>Принтирай</span>
+          </button>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border-4 border-primary-500 print:border-2 print:shadow-none">
-          <div className="bg-linear-to-r from-primary-600 to-accent-600 text-white p-6 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
-            <div className="relative z-10 flex items-center justify-between">
+        {/* Ticket */}
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+
+          {/* Header */}
+          <div className="text-white p-6 relative overflow-hidden" style={{background: 'linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%)'}}>
+            <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full opacity-10 bg-white"></div>
+            <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full opacity-10 bg-white"></div>
+            <div className="relative z-10 flex items-start justify-between">
               <div>
-                <h2 className="text-2xl font-bold mb-1">ЕЛЕКТРОНЕН БИЛЕТ</h2>
-                <p className="text-primary-100">Валиден за качване</p>
+                <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">ПътуванеБГ</p>
+                <h2 className="text-2xl font-black">ЕЛЕКТРОНЕН БИЛЕТ</h2>
+                <span className="inline-block mt-2 text-xs font-bold px-2 py-1 rounded-full bg-white/20">
+                  {statusLabel}
+                </span>
               </div>
               <div className="text-right">
-                <div className="font-mono text-sm bg-white/20 px-3 py-1 rounded">
+                <p className="text-blue-200 text-xs mb-1">Референтен код</p>
+                <div className="font-mono font-bold text-lg bg-white/20 px-3 py-1 rounded-lg tracking-widest">
                   {booking.booking_reference}
-                </div>
-                <div className="text-xs mt-1 text-primary-100">
-                  Код за резервация
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="p-4 sm:p-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-              <div className="lg:col-span-2 space-y-6">
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Пътник</h3>
-                  <p className="text-2xl font-bold text-gray-900">{booking.passenger_name}</p>
-                  <p className="text-gray-600">{booking.passenger_email}</p>
-                  <p className="text-gray-600">{booking.passenger_phone}</p>
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Превоз</h3>
-                  <div className="flex items-center space-x-3">
-                    <span className="text-4xl">{getTransportIcon(trip.transport_type as any)}</span>
-                    <div>
-                      <p className="text-xl font-bold text-gray-900">
-                        {getTransportLabel(trip.transport_type as any)} - {trip.carrier}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-linear-to-r from-primary-50 to-accent-50 rounded-xl p-4 sm:p-6">
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="min-w-0">
-                      <h3 className="text-xl sm:text-3xl font-black text-gray-900 truncate">{trip.from_city}</h3>
-                      <p className="text-xs sm:text-sm text-gray-600 mt-1 truncate">{trip.departure_location}</p>
-                    </div>
-                    <div className="flex flex-col items-center px-2 sm:px-4 shrink-0">
-                      <Navigation className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 rotate-90" />
-                      <div className="h-1 w-10 sm:w-16 bg-primary-600 my-2"></div>
-                    </div>
-                    <div className="text-right min-w-0">
-                      <h3 className="text-xl sm:text-3xl font-black text-gray-900 truncate">{trip.to_city}</h3>
-                      <p className="text-xs sm:text-sm text-gray-600 mt-1 truncate">{trip.arrival_location}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-500 uppercase mb-1">Дата</h3>
-                    <p className="text-lg font-bold text-gray-900">
-                      {new Date(trip.departure_date).toLocaleDateString('bg-BG', { 
-                        day: 'numeric', 
-                        month: 'long',
-                        year: 'numeric'
-                      })}
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-500 uppercase mb-1">Тръгване</h3>
-                    <p className="text-lg font-bold text-gray-900">{trip.departure_time}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-500 uppercase mb-1">Пристигане</h3>
-                    <p className="text-lg font-bold text-gray-900">{trip.arrival_time}</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-500 uppercase mb-1">Места</h3>
-                    <p className="text-2xl font-bold text-primary-600">
-                      {booking.seats.join(', ')}
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-500 uppercase mb-1">Обща цена</h3>
-                    <p className="text-2xl font-bold text-accent-600">
-                      {formatPrice(booking.total_price)}
-                    </p>
-                  </div>
-                </div>
-
+          {/* Route strip */}
+          <div className="bg-primary-50 px-6 py-5 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-3xl font-black text-gray-900">{trip.from_city}</p>
+                <p className="text-sm text-gray-500 mt-1">{trip.departure_location}</p>
+                <p className="text-2xl font-bold text-primary-600 mt-1">{trip.departure_time}</p>
               </div>
-
-              <div className="flex flex-col items-center justify-end space-y-4">
-                <div className="bg-white p-4 rounded-xl shadow-lg border-2 border-gray-200">
-                  <QRCodeSVG
-                    value={qrData}
-                    size={200}
-                    level="H"
-                    includeMargin={true}
-                  />
+              <div className="flex flex-col items-center px-4">
+                <span className="text-2xl">{getTransportIcon(trip.transport_type as any)}</span>
+                <div className="flex items-center my-2">
+                  <div className="w-4 h-0.5 bg-gray-400"></div>
+                  <div className="w-16 h-0.5 bg-primary-400 mx-1"></div>
+                  <div className="w-4 h-0.5 bg-gray-400"></div>
                 </div>
-                <p className="text-xs text-center text-gray-500 max-w-50">
-                  Сканирайте този код при качване
-                </p>
+                <p className="text-xs text-gray-500">{Math.floor(trip.duration_minutes / 60)}ч {trip.duration_minutes % 60}м</p>
               </div>
+              <div className="text-right">
+                <p className="text-3xl font-black text-gray-900">{trip.to_city}</p>
+                <p className="text-sm text-gray-500 mt-1">{trip.arrival_location}</p>
+                <p className="text-2xl font-bold text-primary-600 mt-1">{trip.arrival_time}</p>
+              </div>
+            </div>
+          </div>
 
+          {/* Dashed separator */}
+          <div className="flex items-center px-4">
+            <div className="w-6 h-6 rounded-full bg-gray-100 -ml-7 shrink-0 border border-gray-200"></div>
+            <div className="flex-1 border-t-2 border-dashed border-gray-300 mx-2"></div>
+            <div className="w-6 h-6 rounded-full bg-gray-100 -mr-7 shrink-0 border border-gray-200"></div>
+          </div>
+
+          {/* Details + QR */}
+          <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Пътник</p>
+                <p className="text-lg font-bold text-gray-900">{booking.passenger_name}</p>
+                <p className="text-sm text-gray-500">{booking.passenger_email}</p>
+                <p className="text-sm text-gray-500">{booking.passenger_phone}</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Дата</p>
+                  <p className="font-bold text-gray-900">
+                    {new Date(trip.departure_date).toLocaleDateString('bg-BG', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Превозвач</p>
+                  <p className="font-bold text-gray-900">{trip.carrier}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Места</p>
+                  <p className="text-xl font-black text-primary-600">{booking.seats.join(', ')}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Цена</p>
+                  <p className="text-xl font-black text-gray-900">{formatPrice(booking.total_price)}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center justify-center space-y-3">
+              <div className="bg-white p-3 rounded-xl shadow-md border-2 border-gray-100">
+                <QRCodeSVG value={qrData} size={160} level="H" includeMargin={true} />
+              </div>
+              <p className="text-xs text-center text-gray-400">Покажи на контрольора при качване</p>
             </div>
           </div>
 
           {/* Footer */}
-          <div className="bg-gray-50 px-4 sm:px-8 py-4 border-t-2 border-dashed border-gray-300">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-xs text-gray-500">
-              <div>
-                <p>Издаден на: {new Date(booking.created_at).toLocaleString('bg-BG')}</p>
-              </div>
-              <div className="sm:text-right">
-                <p>ПътуванеБГ · Дигитална транспортна платформа</p>
-              </div>
-            </div>
+          <div className="bg-gray-50 px-6 py-3 border-t border-gray-200 flex justify-between text-xs text-gray-400">
+            <span>Издаден: {new Date(booking.created_at).toLocaleString('bg-BG')}</span>
+            <span>ПътуванеБГ</span>
           </div>
-
         </div>
 
-        <div className="mt-6 print:hidden">
-          <div className="bg-blue-50 border-l-4 border-blue-600 p-4 rounded">
-            <div className="flex">
-              <div className="shrink-0">
-                <svg className="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-blue-700">
-                  <strong>Важно:</strong> Запазете този билет на телефона си или го принтирайте. Покажете QR кода на контрольора при качване.
-                </p>
-              </div>
-            </div>
-          </div>
+        {/* Info box */}
+        <div className="mt-4 bg-blue-50 border-l-4 border-blue-500 p-4 rounded print:hidden">
+          <p className="text-sm text-blue-700">
+            <strong>Важно:</strong> Запазете този билет или го принтирайте. Покажете QR кода на контрольора при качване.
+          </p>
         </div>
 
       </div>
