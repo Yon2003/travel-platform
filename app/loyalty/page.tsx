@@ -191,7 +191,7 @@ export default function LoyaltyPage() {
                     <p className="text-gray-600">Спестете при следващо пътуване</p>
                 </div>
 
-                <div className="card bg-linear-to-br from-blue-600 to-blue-800 text-white mb-6 relative overflow-hidden">
+                <div className="card text-white mb-6 relative overflow-hidden" style={{background: 'linear-gradient(to top right, #1d4ed8, #93c5fd)'}}>
                     <div className="absolute top-0 right-0 text-9xl opacity-10">
                         🎯
                     </div>
@@ -322,10 +322,12 @@ export default function LoyaltyPage() {
                                     <button
                                         onClick={() => handleRedeem(offer.discount, offer.cost)}
                                         disabled={!canRedeem || redeeming}
-                                        className={`w-full py-2 px-4 rounded-lg font-semibold transition-colors ${canRedeem
-                                            ? 'bg-primary-600 text-white hover:bg-primary-700'
-                                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                            }`}
+                                        style={{
+                                            backgroundColor: canRedeem ? '#0284c7' : '#d1d5db',
+                                            color: canRedeem ? '#ffffff' : '#6b7280',
+                                            cursor: !canRedeem || redeeming ? 'not-allowed' : 'pointer',
+                                        }}
+                                        className="w-full py-2 px-4 rounded-lg font-semibold transition-colors"
                                     >
                                         {redeeming ? 'Обработка...' : canRedeem ? 'Размени' : 'Недостатъчно'}
                                     </button>
