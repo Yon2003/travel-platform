@@ -3,39 +3,20 @@
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { formatPrice, formatDateShort, getTransportIcon } from '@/lib/utils';
-import { Calendar, MapPin, Ticket, User, Mail, CreditCard } from 'lucide-react';
-
-interface Booking {
-  id: string;
-  trip_id: number;
-  seats: number[];
-  num_seats: number;
-  total_price: number;
-  status: 'pending' | 'confirmed' | 'cancelled';
-  passenger_name: string;
-  passenger_email: string;
-  passenger_phone: string;
-  booking_reference: string;
-  created_at: string;
-  trip: {
-    from_city: string;
-    to_city: string;
-    transport_type: string;
-    departure_time: string;
-    arrival_time: string;
-    departure_date: string;
-    carrier: string;
-  };
-}
+import { Mail, User, Phone, MapPin, Calendar, BookMarked } from 'lucide-react';
+import { cities } from '@/lib/data';
 
 export default function ProfilePage() {
-  const { user, loading, signOut } = useAuth();
+  const { user, profile, loading, updateProfile } = useAuth();
   const router = useRouter();
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loadingBookings, setLoadingBookings] = useState(true);
+
+  const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [city, setCity] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!loading && !user) {
@@ -44,232 +25,136 @@ export default function ProfilePage() {
   }, [user, loading, router]);
 
   useEffect(() => {
-    async function fetchBookings() {
-      if (!user) return;
-
-      try {
-        const { data, error } = await supabase
-          .from('bookings')
-          .select(`
-            *,
-            trip:trips(*)
-          `)
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        setBookings(data || []);
-      } catch (err) {
-        console.error('Error fetching bookings:', err);
-      } finally {
-        setLoadingBookings(false);
-      }
+    if (profile) {
+      setFullName(profile.full_name || '');
+      setPhone(profile.phone || '');
+      setCity(profile.city || '');
     }
+  }, [profile]);
 
-    if (user) {
-      fetchBookings();
-    }
-  }, [user]);
-
-  const handleCancelBooking = async (bookingId: string) => {
-    if (!confirm('Сигурни ли сте, че искате да анулирате тази резервация?')) {
-      return;
-    }
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setError('');
+    setSaved(false);
 
     try {
-      const { error } = await supabase
-        .from('bookings')
-        .update({ status: 'cancelled' })
-        .eq('id', bookingId);
-
-      if (error) throw error;
-      setBookings(bookings.map(b =>
-        b.id === bookingId ? { ...b, status: 'cancelled' as const } : b
-      ));
-
-      alert('Резервацията е анулирана успешно!');
-    } catch (err) {
-      console.error('Cancel error:', err);
-      alert('Грешка при анулиране на резервацията');
+      await updateProfile({ full_name: fullName, phone, city });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err: any) {
+      setError(err.message || 'Грешка при запазване');
+    } finally {
+      setSaving(false);
     }
-  };
-
-  const getStatusBadge = (status: string) => {
-    const badges = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      confirmed: 'bg-green-100 text-green-800',
-      cancelled: 'bg-red-100 text-red-800',
-    };
-    const labels = {
-      pending: 'Pending',
-      confirmed: 'Потвърдена',
-      cancelled: 'Анулирана',
-    };
-    return (
-      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${badges[status as keyof typeof badges]}`}>
-        {labels[status as keyof typeof labels]}
-      </span>
-    );
   };
 
   if (loading || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Зареждане...
-      </div>
-    );
+    return <div className="min-h-screen flex items-center justify-center">Зареждане...</div>;
   }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="card mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      <div className="max-w-2xl mx-auto">
+
+        <div className="card mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-2xl font-bold">Моят Профил</h1>
+          </div>
+
+          <div className="space-y-2 text-gray-600 text-sm mb-6 pb-6 border-b">
+            <div className="flex items-center space-x-2">
+              <Mail className="w-4 h-4" />
+              <span>{user.email}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Calendar className="w-4 h-4" />
+              <span>Член от: {new Date(user.created_at).toLocaleDateString('bg-BG')}</span>
+            </div>
+          </div>
+
+          <form onSubmit={handleSave} className="space-y-4">
             <div>
-              <h1 className="text-3xl font-bold mb-2">Моят Профил</h1>
-              <div className="space-y-2 text-gray-600">
-                <div className="flex items-center space-x-2">
-                  <Mail className="w-4 h-4" />
-                  <span>{user.email}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <User className="w-4 h-4" />
-                  <span className="text-sm">ID: {user.id.substring(0, 8)}...</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Calendar className="w-4 h-4" />
-                  <span className="text-sm">
-                    Член от: {new Date(user.created_at).toLocaleDateString('bg-BG')}
-                  </span>
-                </div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <User className="w-4 h-4 inline mr-1" />
+                Пълно име
+              </label>
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="input-field"
+                placeholder="Иван Иванов"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Phone className="w-4 h-4 inline mr-1" />
+                Телефон
+              </label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="input-field"
+                placeholder="0888 123 456"
+                pattern="^(\+359|0)[0-9]{9}$"
+                title="Формат: 0888123456 или +359888123456"
+              />
+              <p className="text-xs text-gray-500 mt-1">Формат: 0888123456 или +359888123456</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <MapPin className="w-4 h-4 inline mr-1" />
+                Град
+              </label>
+              <select
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="input-field"
+              >
+                <option value="">Избери град</option>
+                {cities.map((c) => (
+                  <option key={c.id} value={c.name}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+                {error}
               </div>
-            </div>
+            )}
+
+            {saved && (
+              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg text-sm">
+                ✅ Профилът е запазен успешно!
+              </div>
+            )}
+
             <button
-              onClick={() => signOut()}
-              className="btn-primary bg-red-600 hover:bg-red-700"
+              type="submit"
+              disabled={saving}
+              className="btn-primary w-full"
             >
-              Изход
+              {saving ? 'Запазване...' : 'Запази промените'}
             </button>
-          </div>
+          </form>
         </div>
 
-        <div>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">
-              Моите Резервации ({bookings.length})
-            </h2>
-          </div>
-
-          {loadingBookings ? (
-            <div className="space-y-4">
-              {[1, 2].map((i) => (
-                <div key={i} className="card animate-pulse">
-                  <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                </div>
-              ))}
-            </div>
-          ) : bookings.length > 0 ? (
-            <div className="space-y-4">
-              {bookings.map((booking) => (
-                <div key={booking.id} className="card hover:shadow-lg transition-shadow">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3 mb-3">
-                        <span className="text-3xl">
-                          {getTransportIcon(booking.trip.transport_type as 'train' | 'bus' | 'minibus')}
-                        </span>
-                        <div>
-                          <h3 className="font-semibold text-lg">
-                            {booking.trip.from_city} → {booking.trip.to_city}
-                          </h3>
-                          <p className="text-sm text-gray-500">
-                            {booking.trip.carrier}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                        <div className="flex items-center space-x-2 text-gray-600">
-                          <Calendar className="w-4 h-4" />
-                          <span>
-                            {new Date(booking.trip.departure_date).toLocaleDateString('bg-BG')}
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-2 text-gray-600">
-                          <MapPin className="w-4 h-4" />
-                          <span>
-                            {booking.trip.departure_time} - {booking.trip.arrival_time}
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-2 text-gray-600">
-                          <Ticket className="w-4 h-4" />
-                          <span>{booking.num_seats} билет(а)</span>
-                        </div>
-                        <div className="flex items-center space-x-2 text-gray-600">
-                          <CreditCard className="w-4 h-4" />
-                          <span className="font-semibold">
-                            {formatPrice(booking.total_price)}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="mt-3 pt-3 border-t">
-                        <p className="text-xs text-gray-500">
-                          Код за резервация:{' '}
-                          <span className="font-mono font-semibold text-primary-600">
-                            {booking.booking_reference}
-                          </span>
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Създадена на:{' '}
-                          {new Date(booking.created_at).toLocaleString('bg-BG')}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-row lg:flex-col items-center lg:items-end justify-between lg:justify-start gap-3 lg:gap-0 lg:space-y-3 pt-3 lg:pt-0 border-t lg:border-t-0">
-                      {getStatusBadge(booking.status)}
-                      <div className="flex flex-col space-y-2">
-                        {booking.status === 'confirmed' && (
-                          <Link
-                            href={`/ticket/${booking.id}`}
-                            className="btn-primary text-sm px-4 py-2 inline-flex items-center justify-center space-x-2"
-                          >
-                            <span>🎫</span>
-                            <span>Виж билет</span>
-                          </Link>
-                        )}
-
-                        {booking.status === 'pending' && (
-                          <button
-                            onClick={() => handleCancelBooking(booking.id)}
-                            className="text-sm text-red-600 hover:text-red-700 hover:underline"
-                          >
-                            Анулирай
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="card text-center py-16">
-              <div className="text-5xl mb-4">🎫</div>
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                Няма резервации
-              </h3>
-              <p className="text-gray-500 mb-6">
-                Все още нямате направени резервации.
-              </p>
-              <a href="/" className="btn-primary inline-block">
-                Търси курсове
-              </a>
-            </div>
-          )}
+        <div className="card text-center">
+          <BookMarked className="w-8 h-8 text-primary-600 mx-auto mb-3" />
+          <h2 className="text-lg font-semibold mb-2">Моите резервации</h2>
+          <p className="text-gray-500 text-sm mb-4">Вижте всичките си направени резервации и билети</p>
+          <Link href="/bookings" className="btn-primary inline-block">
+            Към резервациите
+          </Link>
         </div>
+
       </div>
     </div>
   );

@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { MapPin, Calendar, Search } from 'lucide-react';
 import { cities } from '@/lib/data';
+import { useAuth } from '@/lib/auth-context';
 
 export default function SearchForm() {
   const router = useRouter();
+  const { profile } = useAuth();
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [date, setDate] = useState('');
@@ -18,9 +20,15 @@ export default function SearchForm() {
 
   const today = new Date().toISOString().split('T')[0];
 
+  useEffect(() => {
+    if (profile?.city && !from) {
+      setFrom(profile.city);
+    }
+  }, [profile?.city]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!from || !to || !date) {
       alert('Моля попълнете всички задължителни полета');
       return;
@@ -30,7 +38,6 @@ export default function SearchForm() {
       .filter(([_, selected]) => selected)
       .map(([mode]) => mode)
       .join(',');
-
 
     router.push(`/search?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&date=${date}&modes=${modes || 'train,bus,minibus'}`);
   };

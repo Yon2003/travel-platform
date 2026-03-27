@@ -20,7 +20,7 @@ export default function Navbar() {
             {user ? (
               <>
                 <Link
-                  href="/profile"
+                  href="/bookings"
                   className="flex items-center space-x-2 text-gray-700 hover:text-primary-600 transition-colors"
                 >
                   <BookMarked className="w-5 h-5" />

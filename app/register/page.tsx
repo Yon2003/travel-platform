@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { cities } from '@/lib/data';
 
 export default function RegisterPage() {
   const { signUp } = useAuth();
@@ -11,6 +12,8 @@ export default function RegisterPage() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [city, setCity] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -20,9 +23,8 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      // Комбинираме име + фамилия
       const fullName = `${firstName} ${lastName}`;
-      await signUp(email, password, fullName);
+      await signUp(email, password, fullName, phone, city);
       router.push('/profile');
     } catch (err: any) {
       setError(err.message || 'Грешка при регистрация');
@@ -86,6 +88,42 @@ export default function RegisterPage() {
               required
               placeholder="ivan@example.com"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Телефон
+            </label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="input-field"
+              required
+              placeholder="0888 123 456"
+              pattern="^(\+359|0)[0-9]{9}$"
+              title="Формат: 0888123456 или +359888123456"
+            />
+            <p className="text-xs text-gray-500 mt-1">Формат: 0888123456 или +359888123456</p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Град
+            </label>
+            <select
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="input-field"
+              required
+            >
+              <option value="">Избери град</option>
+              {cities.map((c) => (
+                <option key={c.id} value={c.name}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>

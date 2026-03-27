@@ -134,8 +134,12 @@ export default function TicketPage({ params }: TicketPageProps) {
   const trip = booking.trip;
   const qrData = `TICKET:${booking.booking_reference}|${trip.from_city}-${trip.to_city}|${trip.departure_date}|${booking.passenger_name}`;
 
-  const statusColor = booking.status === 'validated' ? '#16a34a' : booking.status === 'cancelled' ? '#dc2626' : '#0284c7';
-  const statusLabel = booking.status === 'validated' ? '✓ Валидиран' : booking.status === 'cancelled' ? '✗ Анулиран' : '● Активен';
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const departure = new Date(trip.departure_date); departure.setHours(0, 0, 0, 0);
+  const isExpired = departure < today;
+
+  const statusColor = booking.status === 'cancelled' ? '#dc2626' : isExpired ? '#6b7280' : booking.status === 'validated' ? '#16a34a' : '#0284c7';
+  const statusLabel = booking.status === 'cancelled' ? '✗ Анулиран' : isExpired ? '⏱ Изтекъл' : booking.status === 'validated' ? '✓ Валидиран' : '● Активен';
 
   return (
     <div className="min-h-screen bg-gray-100 py-8 print:bg-white">

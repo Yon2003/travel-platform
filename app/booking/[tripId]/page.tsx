@@ -19,7 +19,7 @@ interface BookingPageProps {
 
 export default function BookingPage({ params }: BookingPageProps) {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
 
   const [tripId, setTripId] = useState<string>('');
   const [trip, setTrip] = useState<Trip | null>(null);
@@ -108,7 +108,13 @@ export default function BookingPage({ params }: BookingPageProps) {
     if (user?.email) {
       setPassengerEmail(user.email);
     }
-  }, [user]);
+    if (profile?.full_name) {
+      setPassengerName(profile.full_name);
+    }
+    if (profile?.phone) {
+      setPassengerPhone(profile.phone);
+    }
+  }, [user, profile]);
 
   const handleCheckVoucher = async () => {
     if (!voucherCode.trim()) {
