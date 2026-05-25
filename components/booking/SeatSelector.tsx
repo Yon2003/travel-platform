@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { User, X } from 'lucide-react';
-import { useAuth } from '@/lib/auth-context';
 
 interface SeatSelectorProps {
   tripId: number;
@@ -28,11 +27,9 @@ export default function SeatSelector({
   onSeatsSelected,
   maxSeats = 5,
 }: SeatSelectorProps) {
-  const { user } = useAuth();
   const [seats, setSeats] = useState<Seat[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
-  const [userId, setUserId] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -216,10 +213,7 @@ function getLayoutForTransport(
   const seats: Seat[] = [];
   const positions: Array<'A' | 'B' | 'C' | 'D'> = ['A', 'B', 'C', 'D'];
 
-  let seatsPerRow = 4;
-  if (type === 'minibus') seatsPerRow = 4;
-  if (type === 'bus') seatsPerRow = 4;
-  if (type === 'train') seatsPerRow = 4;
+  const seatsPerRow = 4;
 
   let seatNum = 1;
   let row = 1;

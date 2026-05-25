@@ -1,10 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dspnykzmircudrxrzear.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'sb_publishable_7kpem7juuHv5BB9LEa2TEQ_oGGamRcZ';
-
-const supabaseAdmin = createClient(supabaseUrl, supabaseKey);
+import { supabase as supabaseAdmin } from '@/lib/supabase';
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
@@ -34,13 +29,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ valid: false, reason: 'Билетът вече е валидиран.' });
   }
 
-  // Mark as validated
-  await supabaseAdmin
-    .from('bookings')
-    .update({ status: 'validated' })
-    .eq('id', data.id);
-
   const trip = data.trip;
+  const today = new Date().toISOString().split('T')[0];
+  if (trip.departure_date !== today) {
+    const d = new Date(trip.departure_date);
+    const dateStr = `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`;
+    return NextResponse.json({ valid: false, reason: `Билетът е за ${dateStr}, а не за днес.` });
+  }
+
+  // Mark as validated — conditional update prevents double scanning and race conditions
+  const { count, error: updateError } = await supabaseAdmin
+    .from('bookings')
+    .update({ status: 'validated' }, { count: 'exact' })
+    .eq('id', data.id)
+    .neq('status', 'validated');
+
+  if (updateError || count === 0) {
+    return NextResponse.json({ valid: false, reason: 'Билетът вече е валидиран.' });
+  }
+
   const transportMap: Record<string, string> = {
     train: 'Влак',
     bus: 'Автобус',

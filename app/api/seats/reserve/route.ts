@@ -5,38 +5,40 @@ export async function POST(request: NextRequest) {
     try {
         const { tripId, seats, userId } = await request.json();
 
-        if (!tripId || !seats || !userId) {
+        if (!tripId || !seats || !Array.isArray(seats) || seats.length === 0 || !userId) {
             return NextResponse.json(
                 { error: 'Missing required fields' },
                 { status: 400 }
             );
         }
 
+        const now = new Date().toISOString();
+
         await supabase
             .from('seat_reservations')
             .delete()
-            .lt('reserved_until', new Date().toISOString());
+            .lt('reserved_until', now);
 
-        const { data: tempReserved, error: tempError } = await supabase
-            .from('seat_reservations')
-            .select('seat_number')
-            .eq('trip_id', tripId)
-            .in('seat_number', seats)
-            .neq('user_id', userId)
-            .gt('reserved_until', new Date().toISOString());
+        const [tempResult, bookResult] = await Promise.all([
+            supabase
+                .from('seat_reservations')
+                .select('seat_number')
+                .eq('trip_id', tripId)
+                .in('seat_number', seats)
+                .neq('user_id', userId)
+                .gt('reserved_until', now),
+            supabase
+                .from('bookings')
+                .select('seats')
+                .eq('trip_id', tripId)
+                .in('status', ['confirmed', 'pending', 'validated']),
+        ]);
 
-        if (tempError) throw tempError;
+        if (tempResult.error) throw tempResult.error;
+        if (bookResult.error) throw bookResult.error;
 
-        const { data: permanentBooked, error: bookError } = await supabase
-            .from('bookings')
-            .select('seats')
-            .eq('trip_id', tripId)
-            .in('status', ['confirmed', 'pending']);
-
-        if (bookError) throw bookError;
-
-        const tempTaken = tempReserved?.map(r => r.seat_number) || [];
-        const permTaken = permanentBooked?.flatMap(b => b.seats).filter(s => seats.includes(s)) || [];
+        const tempTaken = tempResult.data?.map(r => r.seat_number) || [];
+        const permTaken = bookResult.data?.flatMap(b => b.seats).filter((s: number) => seats.includes(s)) || [];
         const allTaken = [...new Set([...tempTaken, ...permTaken])];
 
         if (allTaken.length > 0) {
@@ -55,17 +57,13 @@ export async function POST(request: NextRequest) {
             reserved_until: reservedUntil,
         }));
 
-        const { error: insertError } = await supabase
+        const { error: upsertError } = await supabase
             .from('seat_reservations')
-            .insert(reservations);
+            .upsert(reservations, { onConflict: 'trip_id,seat_number' });
 
-        if (insertError) throw insertError;
+        if (upsertError) throw upsertError;
 
-        return NextResponse.json({
-            success: true,
-            reservedUntil,
-            seats
-        });
+        return NextResponse.json({ success: true, reservedUntil, seats });
     } catch (error) {
         console.error('Error reserving seats:', error);
         return NextResponse.json(

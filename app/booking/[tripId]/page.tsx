@@ -162,17 +162,29 @@ export default function BookingPage({ params }: BookingPageProps) {
     setError('');
 
     try {
+      const checkResponse = await fetch(`/api/seats/${trip.id}`);
+      const checkData = await checkResponse.json();
+      const takenSeats: number[] = checkData.takenSeats || [];
+
+      let seatsToBook: number[];
+
       if (selectedSeats.length > 0) {
-        const checkResponse = await fetch(`/api/seats/${trip.id}`);
-        const checkData = await checkResponse.json();
-
-        const alreadyTaken = selectedSeats.filter(s => checkData.takenSeats.includes(s));
-
+        const alreadyTaken = selectedSeats.filter(s => takenSeats.includes(s));
         if (alreadyTaken.length > 0) {
           setError(`Места ${alreadyTaken.join(', ')} вече са заети! Моля изберете други места.`);
           setSubmitting(false);
           return;
         }
+        seatsToBook = selectedSeats;
+      } else {
+        const allSeats = Array.from({ length: trip.availableSeats }, (_, i) => i + 1);
+        const available = allSeats.filter(s => !takenSeats.includes(s));
+        if (available.length < numSeats) {
+          setError(`Няма достатъчно свободни места. Налични: ${available.length}`);
+          setSubmitting(false);
+          return;
+        }
+        seatsToBook = available.slice(0, numSeats);
       }
 
       const { data, error } = await supabase
@@ -180,7 +192,7 @@ export default function BookingPage({ params }: BookingPageProps) {
         .insert({
           user_id: user.id,
           trip_id: trip.id,
-          seats: selectedSeats.length > 0 ? selectedSeats : Array.from({ length: numSeats }, (_, i) => i + 1),
+          seats: seatsToBook,
           num_seats: numSeats,
           total_price: trip.price * numSeats * (1 - voucherDiscount),
           status: 'confirmed',
@@ -201,7 +213,8 @@ export default function BookingPage({ params }: BookingPageProps) {
           })
           .eq('id', trip.id);
 
-        const pointsEarned = Math.floor(trip.price * numSeats);
+        const paidAmount = trip.price * numSeats * (1 - voucherDiscount);
+        const pointsEarned = Math.floor(paidAmount);
         await supabase.rpc('add_loyalty_points', {
           p_user_id: user.id,
           p_points: pointsEarned
@@ -220,7 +233,6 @@ export default function BookingPage({ params }: BookingPageProps) {
         setBookingReference(data.booking_reference);
       }
     } catch (err: any) {
-      console.error('Booking error:', err);
       setError(err.message || 'Грешка при създаване на резервация');
     } finally {
       setSubmitting(false);
@@ -270,16 +282,16 @@ export default function BookingPage({ params }: BookingPageProps) {
               </p>
             </div>
             <p className="text-gray-600 mb-8">
-              Изпратихме потвърждение на <strong>{passengerEmail}</strong>
+              Запазете вашия код за резервация — ще ви е нужен при качване.
             </p>
             <div className="bg-accent-50 border-2 border-accent-600 rounded-lg p-4 mb-6 inline-block">
               <p className="text-sm text-gray-600 mb-1">🎯 Спечелихте точки!</p>
               <p className="text-2xl font-bold text-accent-600">
-                +{Math.floor(trip.price * numSeats)} точки
+                +{Math.floor(trip.price * numSeats * (1 - voucherDiscount))} точки
               </p>
             </div>
             <div className="space-y-3">
-              <Link href="/profile" className="btn-primary inline-block">
+              <Link href="/bookings" className="btn-primary inline-block">
                 Виж моите резервации
               </Link>
               <br />
