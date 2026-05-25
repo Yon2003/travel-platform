@@ -12,6 +12,7 @@ export default function SearchForm() {
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [date, setDate] = useState('');
+  const [error, setError] = useState('');
   const [selectedModes, setSelectedModes] = useState({
     train: true,
     bus: true,
@@ -28,9 +29,15 @@ export default function SearchForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
 
     if (!from || !to || !date) {
-      alert('Моля попълнете всички задължителни полета');
+      setError('Моля попълнете всички задължителни полета.');
+      return;
+    }
+
+    if (from === to) {
+      setError('Началният и крайният град не могат да бъдат еднакви.');
       return;
     }
 
@@ -52,6 +59,11 @@ export default function SearchForm() {
   return (
     <form onSubmit={handleSubmit} className="card max-w-4xl mx-auto">
       <div className="space-y-6">
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">

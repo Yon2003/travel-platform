@@ -322,9 +322,9 @@ function SearchResults() {
                 <p className="text-gray-500 mb-6">
                   Няма курсове, които отговарят на избраните филтри.
                 </p>
-                <button onClick={clearAllFilters} className="btn-primary inline-block">
+                <Link href="/" className="btn-primary inline-block">
                   Изчисти филтрите
-                </button>
+                </Link>
               </div>
             )}
           </div>
