@@ -7,34 +7,18 @@ export async function GET(
 ) {
   try {
     const { tripId } = await context.params;
-    const now = new Date().toISOString();
 
-    await supabase
-      .from('seat_reservations')
-      .delete()
-      .lt('reserved_until', now);
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('seats')
+      .eq('trip_id', parseInt(tripId))
+      .in('status', ['confirmed', 'pending', 'validated']);
 
-    const [bookingsResult, tempResult] = await Promise.all([
-      supabase
-        .from('bookings')
-        .select('seats')
-        .eq('trip_id', parseInt(tripId))
-        .in('status', ['confirmed', 'pending', 'validated']),
-      supabase
-        .from('seat_reservations')
-        .select('seat_number')
-        .eq('trip_id', tripId)
-        .gt('reserved_until', now),
-    ]);
+    if (error) throw error;
 
-    if (bookingsResult.error) throw bookingsResult.error;
-    if (tempResult.error) throw tempResult.error;
+    const takenSeats = [...new Set(data?.flatMap(b => b.seats) || [])];
 
-    const bookedSeats = bookingsResult.data?.flatMap(b => b.seats) || [];
-    const tempSeats = tempResult.data?.map(r => r.seat_number) || [];
-    const takenSeats = [...new Set([...bookedSeats, ...tempSeats])];
-
-    return NextResponse.json({ takenSeats, bookedSeats: takenSeats });
+    return NextResponse.json({ takenSeats });
   } catch (error) {
     console.error('Error fetching seat status:', error);
     return NextResponse.json(
