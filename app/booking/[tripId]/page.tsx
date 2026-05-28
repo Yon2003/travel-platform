@@ -187,6 +187,20 @@ export default function BookingPage({ params }: BookingPageProps) {
         seatsToBook = available.slice(0, numSeats);
       }
 
+      const reserveResponse = await fetch('/api/seats/reserve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tripId: trip.id, seats: seatsToBook, userId: user.id }),
+      });
+
+      if (!reserveResponse.ok) {
+        const reserveData = await reserveResponse.json();
+        const takenList = reserveData.takenSeats?.join(', ') ?? '';
+        setError(`Места ${takenList} вече са заети. Моля изберете други.`);
+        setSubmitting(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('bookings')
         .insert({
@@ -229,6 +243,12 @@ export default function BookingPage({ params }: BookingPageProps) {
             })
             .eq('id', appliedVoucherId);
         }
+
+        await fetch('/api/seats/reserve', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tripId: trip.id, userId: user.id }),
+        });
 
         setBookingReference(data.booking_reference);
       }
