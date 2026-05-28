@@ -57,19 +57,11 @@ export async function POST(request: NextRequest) {
             reserved_until: reservedUntil,
         }));
 
-        const { error: insertError } = await supabase
+        const { error: upsertError } = await supabase
             .from('seat_reservations')
-            .insert(reservations);
+            .upsert(reservations, { onConflict: 'trip_id,seat_number' });
 
-        if (insertError) {
-            if (insertError.code === '23505') {
-                return NextResponse.json(
-                    { error: 'Some seats are already taken' },
-                    { status: 409 }
-                );
-            }
-            throw insertError;
-        }
+        if (upsertError) throw upsertError;
 
         return NextResponse.json({ success: true, reservedUntil, seats });
     } catch (error) {
