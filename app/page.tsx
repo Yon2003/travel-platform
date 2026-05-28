@@ -1,5 +1,6 @@
 import SearchForm from '@/components/SearchForm';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Home() {
   const today = new Date().toISOString().split('T')[0];
@@ -31,21 +32,27 @@ export default function Home() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center p-6 rounded-xl bg-gray-50">
-              <div className="text-5xl mb-4">🔍</div>
+              <div className="flex justify-center mb-4">
+                <Image src="https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=96&h=96&fit=crop&auto=format" alt="Лесно търсене" width={80} height={80} className="rounded-xl object-cover" />
+              </div>
               <h3 className="text-xl font-semibold mb-2">Лесно търсене</h3>
               <p className="text-gray-600">
                 Намерете всички опции за вашето пътуване на едно място
               </p>
             </div>
             <div className="text-center p-6 rounded-xl bg-gray-50">
-              <div className="text-5xl mb-4">💰</div>
+              <div className="flex justify-center mb-4">
+                <Image src="https://images.unsplash.com/photo-1554672408-730436b60dde?w=96&h=96&fit=crop&auto=format" alt="Добри цени" width={80} height={80} className="rounded-xl object-cover" />
+              </div>
               <h3 className="text-xl font-semibold mb-2">Добри цени</h3>
               <p className="text-gray-600">
                 Сравнете цените и изберете най-добрата опция за вас
               </p>
             </div>
             <div className="text-center p-6 rounded-xl bg-gray-50">
-              <div className="text-5xl mb-4">⚡</div>
+              <div className="flex justify-center mb-4">
+                <Image src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=96&h=96&fit=crop&auto=format" alt="Бърза резервация" width={80} height={80} className="rounded-xl object-cover" />
+              </div>
               <h3 className="text-xl font-semibold mb-2">Бърза резервация</h3>
               <p className="text-gray-600">
                 Резервирайте билета си за секунди
