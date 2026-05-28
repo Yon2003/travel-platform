@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import MapModal from './MapModal';
 import { Trip } from '@/types';
-import { formatDuration, formatPrice, getTransportIcon, getTransportLabel } from '@/lib/utils';
+import { formatDuration, formatPrice, getTransportLabel } from '@/lib/utils';
+import TransportImage from '@/components/TransportImage';
 import { Clock, MapPin, Users } from 'lucide-react';
 import Link from 'next/link';
 
@@ -18,7 +19,7 @@ export default function TripCard({ trip }: TripCardProps) {
 
         <div className="flex-1 space-y-3">
           <div className="flex items-center space-x-3">
-            <span className="text-3xl">{getTransportIcon(trip.type)}</span>
+            <TransportImage type={trip.type} size={48} />
             <div>
               <h3 className="font-semibold text-lg text-gray-900">
                 {getTransportLabel(trip.type)}
