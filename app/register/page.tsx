@@ -1,9 +1,10 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { cities } from '@/lib/data';
+import { fetchCities } from '@/lib/data';
+import { City } from '@/types';
 
 export default function RegisterPage() {
   const { signUp } = useAuth();
@@ -16,6 +17,11 @@ export default function RegisterPage() {
   const [city, setCity] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [cities, setCities] = useState<City[]>([]);
+
+  useEffect(() => {
+    fetchCities().then(setCities);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

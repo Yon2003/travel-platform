@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Mail, User, Phone, MapPin, Calendar, BookMarked } from 'lucide-react';
-import { cities } from '@/lib/data';
+import { fetchCities } from '@/lib/data';
+import { City } from '@/types';
 
 export default function ProfilePage() {
   const { user, profile, loading, updateProfile } = useAuth();
@@ -17,6 +18,11 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
+  const [cities, setCities] = useState<City[]>([]);
+
+  useEffect(() => {
+    fetchCities().then(setCities);
+  }, []);
 
   useEffect(() => {
     if (!loading && !user) {

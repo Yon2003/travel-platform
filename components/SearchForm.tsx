@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { MapPin, Calendar, Search } from 'lucide-react';
-import { cities } from '@/lib/data';
+import { fetchCities } from '@/lib/data';
+import { City } from '@/types';
 import { useAuth } from '@/lib/auth-context';
 
 export default function SearchForm() {
@@ -13,6 +14,11 @@ export default function SearchForm() {
   const [to, setTo] = useState('');
   const [date, setDate] = useState('');
   const [error, setError] = useState('');
+  const [cities, setCities] = useState<City[]>([]);
+
+  useEffect(() => {
+    fetchCities().then(setCities);
+  }, []);
   const [selectedModes, setSelectedModes] = useState({
     train: true,
     bus: true,

@@ -1,12 +1,11 @@
 import { City } from '@/types';
 
-export const cities: City[] = [
-  { id: 1, name: 'София' },
-  { id: 2, name: 'Пловдив' },
-  { id: 3, name: 'Варна' },
-  { id: 4, name: 'Бургас' },
-  { id: 5, name: 'Пазарджик' },
-  { id: 6, name: 'Стара Загора' },
-  { id: 7, name: 'Габрово' },
-  { id: 8, name: 'Велико Търново' },
-];
+export async function fetchCities(): Promise<City[]> {
+  try {
+    const response = await fetch('/api/cities');
+    const data = await response.json();
+    return data.cities || [];
+  } catch {
+    return [];
+  }
+}
