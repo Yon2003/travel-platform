@@ -17,7 +17,7 @@ interface Seat {
   number: number;
   status: SeatStatus;
   row: number;
-  position: 'A' | 'B' | 'C' | 'D';
+  position: 'A' | 'B' | 'C' | 'D' | 'E';
 }
 
 export default function SeatSelector({
@@ -100,6 +100,20 @@ export default function SeatSelector({
         return baseClass;
     }
   };
+
+  const renderSeatButton = (seat: Seat) => (
+    <button
+      type="button"
+      key={seat.number}
+      onClick={() => handleSeatClick(seat.number)}
+      className={getSeatClass(seat)}
+      disabled={seat.status === 'reserved' || seat.status === 'taken'}
+      title={`Място ${seat.number}`}
+    >
+      {seat.number}
+    </button>
+  );
+
   const rows = seats.reduce((acc, seat) => {
     if (!acc[seat.row]) acc[seat.row] = [];
     acc[seat.row].push(seat);
@@ -141,38 +155,25 @@ export default function SeatSelector({
               const rowSeats = rows[Number(rowNum)].sort((a, b) =>
                 a.position.localeCompare(b.position)
               );
+
+              if (transportType === 'minibus') {
+                const isBackRow = rowSeats.length > 1;
+                return (
+                  <div key={rowNum} className="flex items-center space-x-1 sm:space-x-3">
+                    <span className="w-6 sm:w-8 text-xs sm:text-sm text-gray-500 text-center">{rowNum}</span>
+                    <div className={`flex flex-1 ${isBackRow ? 'justify-end' : 'justify-start'} space-x-1 sm:space-x-2`}>
+                      {rowSeats.map(renderSeatButton)}
+                    </div>
+                  </div>
+                );
+              }
+
               return (
                 <div key={rowNum} className="flex items-center justify-center space-x-1 sm:space-x-3">
                   <span className="w-6 sm:w-8 text-xs sm:text-sm text-gray-500 text-center">{rowNum}</span>
-                  {rowSeats
-                    .filter((s) => s.position === 'A' || s.position === 'B')
-                    .map((seat) => (
-                      <button
-                        type="button"
-                        key={seat.number}
-                        onClick={() => handleSeatClick(seat.number)}
-                        className={getSeatClass(seat)}
-                        disabled={seat.status === 'reserved' || seat.status === 'taken'}
-                        title={`Място ${seat.number}`}
-                      >
-                        {seat.number}
-                      </button>
-                    ))}
+                  {rowSeats.filter((s) => s.position === 'A' || s.position === 'B').map(renderSeatButton)}
                   <div className="w-4 sm:w-8"></div>
-                  {rowSeats
-                    .filter((s) => s.position === 'C' || s.position === 'D')
-                    .map((seat) => (
-                      <button
-                        type="button"
-                        key={seat.number}
-                        onClick={() => handleSeatClick(seat.number)}
-                        className={getSeatClass(seat)}
-                        disabled={seat.status === 'reserved' || seat.status === 'taken'}
-                        title={`Място ${seat.number}`}
-                      >
-                        {seat.number}
-                      </button>
-                    ))}
+                  {rowSeats.filter((s) => s.position === 'C' || s.position === 'D').map(renderSeatButton)}
                 </div>
               );
             })}
@@ -210,6 +211,10 @@ function getLayoutForTransport(
   total: number,
   takenSeats: number[] = []
 ): Seat[] {
+  if (type === 'minibus') {
+    return getMinibusLayout(total, takenSeats);
+  }
+
   const seats: Seat[] = [];
   const positions: Array<'A' | 'B' | 'C' | 'D'> = ['A', 'B', 'C', 'D'];
 
@@ -229,6 +234,38 @@ function getLayoutForTransport(
       seatNum++;
     }
     row++;
+  }
+
+  return seats;
+}
+
+function getMinibusLayout(total: number, takenSeats: number[]): Seat[] {
+  const seats: Seat[] = [];
+  const backRowSize = Math.min(5, total);
+  const singleRows = total - backRowSize;
+  const backRowPositions: Array<'A' | 'B' | 'C' | 'D' | 'E'> = ['A', 'B', 'C', 'D', 'E'];
+
+  let seatNum = 1;
+  let row = 1;
+
+  for (; row <= singleRows; row++) {
+    seats.push({
+      number: seatNum,
+      status: takenSeats.includes(seatNum) ? 'taken' : 'available',
+      row,
+      position: 'A',
+    });
+    seatNum++;
+  }
+
+  for (let i = 0; i < backRowSize; i++) {
+    seats.push({
+      number: seatNum,
+      status: takenSeats.includes(seatNum) ? 'taken' : 'available',
+      row,
+      position: backRowPositions[i],
+    });
+    seatNum++;
   }
 
   return seats;
