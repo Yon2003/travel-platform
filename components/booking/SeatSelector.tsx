@@ -176,7 +176,7 @@ export default function SeatSelector({
                     <div className="flex space-x-1 sm:space-x-2">
                       {rowSeats.filter((s) => s.position === 'A' || s.position === 'B').map(renderSeatButton)}
                     </div>
-                    <div className="flex-none w-8"></div>
+                    <div className="flex-none w-10"></div>
                     <div className="flex space-x-1 sm:space-x-2">
                       {rowSeats.filter((s) => s.position === 'D').map(renderSeatButton)}
                     </div>
@@ -257,7 +257,7 @@ function getLayoutForTransport(
 
 function getMinibusLayout(total: number, takenSeats: number[]): Seat[] {
   const seats: Seat[] = [];
-  const backRowSize = Math.min(5, total);
+  const backRowSize = Math.min(4, total);
   let remaining = total - backRowSize;
 
   let seatNum = 1;
