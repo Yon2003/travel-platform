@@ -157,12 +157,28 @@ export default function SeatSelector({
               );
 
               if (transportType === 'minibus') {
-                const isBackRow = rowSeats.length > 1;
+                const isBackRow = rowSeats.length > 3;
+
+                if (isBackRow) {
+                  return (
+                    <div key={rowNum} className="flex items-center justify-end space-x-1 sm:space-x-3">
+                      <span className="w-6 sm:w-8 text-xs sm:text-sm text-gray-500 text-center">{rowNum}</span>
+                      <div className="flex space-x-1 sm:space-x-2">
+                        {rowSeats.map(renderSeatButton)}
+                      </div>
+                    </div>
+                  );
+                }
+
                 return (
                   <div key={rowNum} className="flex items-center space-x-1 sm:space-x-3">
                     <span className="w-6 sm:w-8 text-xs sm:text-sm text-gray-500 text-center">{rowNum}</span>
-                    <div className={`flex flex-1 ${isBackRow ? 'justify-end' : 'justify-start'} space-x-1 sm:space-x-2`}>
-                      {rowSeats.map(renderSeatButton)}
+                    <div className="flex space-x-1 sm:space-x-2">
+                      {rowSeats.filter((s) => s.position === 'A' || s.position === 'B').map(renderSeatButton)}
+                    </div>
+                    <div className="flex-1"></div>
+                    <div className="flex space-x-1 sm:space-x-2">
+                      {rowSeats.filter((s) => s.position === 'D').map(renderSeatButton)}
                     </div>
                   </div>
                 );
@@ -242,22 +258,31 @@ function getLayoutForTransport(
 function getMinibusLayout(total: number, takenSeats: number[]): Seat[] {
   const seats: Seat[] = [];
   const backRowSize = Math.min(5, total);
-  const singleRows = total - backRowSize;
-  const backRowPositions: Array<'A' | 'B' | 'C' | 'D' | 'E'> = ['A', 'B', 'C', 'D', 'E'];
+  let remaining = total - backRowSize;
 
   let seatNum = 1;
   let row = 1;
 
-  for (; row <= singleRows; row++) {
-    seats.push({
-      number: seatNum,
-      status: takenSeats.includes(seatNum) ? 'taken' : 'available',
-      row,
-      position: 'A',
-    });
-    seatNum++;
+  while (remaining > 0) {
+    const inRow = Math.min(3, remaining);
+    const positions: Array<'A' | 'B' | 'D'> =
+      inRow === 1 ? ['A'] : inRow === 2 ? ['A', 'B'] : ['A', 'B', 'D'];
+
+    for (const position of positions) {
+      seats.push({
+        number: seatNum,
+        status: takenSeats.includes(seatNum) ? 'taken' : 'available',
+        row,
+        position,
+      });
+      seatNum++;
+    }
+
+    remaining -= inRow;
+    row++;
   }
 
+  const backRowPositions: Array<'A' | 'B' | 'C' | 'D' | 'E'> = ['A', 'B', 'C', 'D', 'E'];
   for (let i = 0; i < backRowSize; i++) {
     seats.push({
       number: seatNum,
