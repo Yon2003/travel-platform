@@ -161,7 +161,7 @@ export default function SeatSelector({
 
                 if (isBackRow) {
                   return (
-                    <div key={rowNum} className="flex items-center justify-end space-x-1 sm:space-x-3">
+                    <div key={rowNum} className="flex items-center space-x-1 sm:space-x-3">
                       <span className="w-6 sm:w-8 text-xs sm:text-sm text-gray-500 text-center">{rowNum}</span>
                       <div className="flex space-x-1 sm:space-x-2">
                         {rowSeats.map(renderSeatButton)}
@@ -176,7 +176,7 @@ export default function SeatSelector({
                     <div className="flex space-x-1 sm:space-x-2">
                       {rowSeats.filter((s) => s.position === 'A' || s.position === 'B').map(renderSeatButton)}
                     </div>
-                    <div className="flex-1"></div>
+                    <div className="flex-none w-8"></div>
                     <div className="flex space-x-1 sm:space-x-2">
                       {rowSeats.filter((s) => s.position === 'D').map(renderSeatButton)}
                     </div>
